@@ -114,3 +114,6 @@ const Login = () => {
 };
 
 export default Login;
+
+// "@splidejs/react-splide": "^0.7.12",
+// "@splidejs/splide": "^4.1.4",

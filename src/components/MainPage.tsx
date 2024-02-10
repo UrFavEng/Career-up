@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { FaSearch } from "react-icons/fa";
 import "@splidejs/react-splide/css";
