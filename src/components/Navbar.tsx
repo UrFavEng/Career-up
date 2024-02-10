@@ -15,9 +15,9 @@ import {
 import { Hourglass } from "react-loader-spinner";
 import { IoIosArrowForward } from "react-icons/io";
 const Navbar = () => {
-  let timerInterval: number | null = null;
-
   const sweetAlertbeInstructor = () => {
+    let timerInterval: NodeJS.Timeout | null = null; // تعيين قيمة افتراضية مناسبة
+
     Swal.fire({
       title: "Auto close alert!",
       html: "I will close in <b></b> milliseconds.",
@@ -33,12 +33,14 @@ const Navbar = () => {
         }
       },
       willClose: () => {
-        clearInterval(timerInterval!); // Use non-null assertion here
+        if (timerInterval) {
+          clearInterval(timerInterval); // تأكد من عدم تجاوز قيمة متغير timerInterval
+        }
       },
-    }).then((result) => {
-      if (result.dismiss === Swal.DismissReason.timer) {
-        console.log("I was closed by the timer");
-      }
+    }).then(() => {
+      // if (result.dismiss === Swal.DismissReason.timer) {
+      //   console.log("I was closed by the timer");
+      // }
     });
   };
   const sweetAlertDone = () => {
