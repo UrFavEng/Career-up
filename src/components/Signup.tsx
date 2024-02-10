@@ -1,32 +1,31 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useSignUpMutation } from "../store/apislice";
 import { Hourglass } from "react-loader-spinner";
-type dataTypes = {
-  fullname: string;
-  email: string;
-  password: string;
-};
+import { ErrorSignUP, UserSignUP } from "../types/types.model";
+import { useSignUpMutation } from "../store/apislice";
+
 const Signup = () => {
-  const [loading, setLoading] = useState<boolean>();
-  const [err, seterr] = useState<string>("");
+  const navigate = useNavigate();
+  const [err, setErr] = useState<string>("");
   const {
-    register,
     handleSubmit,
+    register,
     formState: { errors },
-  } = useForm<dataTypes>({ mode: "onBlur" });
-  const [signUp] = useSignUpMutation();
-  const OnSubmit = (data: dataTypes) => {
-    seterr("");
-    setLoading(true);
-    signUp(data)
+  } = useForm<UserSignUP>();
+  const [signUP, { isLoading }] = useSignUpMutation();
+
+  const onSubmit: SubmitHandler<UserSignUP> = (data) => {
+    setErr("");
+    console.log(data);
+    signUP(data)
       .unwrap()
       .then((fulfilled) => {
-        seterr("");
-        console.log(fulfilled?.payload?.user);
-        setLoading(false);
-        localStorage.setItem("idUserCareerup", fulfilled?.payload?.user?.id);
+        setErr("");
+        localStorage.setItem(
+          "idUserCareerup",
+          fulfilled?.payload?.user?.id.toString()
+        );
         localStorage.setItem(
           "roleUserCareerup",
           fulfilled?.payload?.user?.role
@@ -45,20 +44,18 @@ const Signup = () => {
         );
         navigate("/");
       })
-      .catch((rejected) => {
-        console.error(rejected?.data?.message);
-        seterr(rejected?.data?.message);
-        setLoading(false);
+      .catch((rejected: ErrorSignUP) => {
+        setErr(rejected.data.message);
       });
   };
-  const navigate = useNavigate();
+
   return (
-    <div className="pt-[25px] flex justify-center items-center flex-col w-[95%] sm:w-[500px] m-auto">
+    <div className="pt-[25px] flex justify-center items-center flex-col w-[95%] sm:w-[500px] m-auto h-[72vh]">
       <p className=" font-medium text-left w-full mb-[6px] text-[14px] text-text">
         Sign up and develop your skills
       </p>
       <form
-        onSubmit={handleSubmit(OnSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
         noValidate
         action=""
         className="flex justify-center items-center flex-col gap-3  w-full "
@@ -76,6 +73,7 @@ const Signup = () => {
         )}
         <input
           {...register("email", {
+            required: "Email is required",
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
               message: "invalid email address",
@@ -105,12 +103,17 @@ const Signup = () => {
           </p>
         )}
         <input
-          {...register("password")}
+          {...register("password", { required: "password is required" })}
           type="password"
           placeholder="Password"
           className="pl-[10px] w-full h-[50px] outline-none border-b-2"
-        />
-        {loading ? (
+        />{" "}
+        {errors.password?.message && (
+          <p className="w-[100%] tracking-[1px] leading-[5px] text-[17] font-medium text-primary py-[5px]">
+            {errors.password?.message}
+          </p>
+        )}
+        {isLoading ? (
           <Hourglass
             visible={true}
             height="43"
