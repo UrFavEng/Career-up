@@ -12,10 +12,11 @@ import {
   AddCourseres,
   teacingCoursesRes,
 } from "../types/types.model";
+
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://e-learning-5rhj.onrender.com/api/v1/",
+    baseUrl: "/api/v1/", // تعيين baseUrl للـ Proxy الخاص بك
     credentials: "include",
   }),
   tagTypes: ["user", "TeachingCourse"],
