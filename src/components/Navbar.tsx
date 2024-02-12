@@ -51,7 +51,7 @@ const Navbar = () => {
   };
   const { data: allCats, isLoading: loadingGetAllCats } = useGetAllCatsQuery();
   const { data: dataUser, isLoading: loadingGetme, error } = useGetmeQuery();
-  console.log(dataUser?.payload.role);
+  // console.log(dataUser?.payload.role);
   const [beInstructor] = useBeInstructorMutation();
   const beInstructorFunc = async () => {
     sweetAlertbeInstructor();
@@ -59,14 +59,14 @@ const Navbar = () => {
       .unwrap()
       .then((fulfilled) => {
         sweetAlertDone();
-        console.log(fulfilled.payload.user.role);
+        // console.log(fulfilled.payload.user.role);
       })
       .catch((rejected) => {
-        console.log(rejected);
+        // console.log(rejected);
       });
   };
   const cats = allCats?.payload?.categories;
-  console.log(cats);
+  // console.log(cats);
   const [LogOut, { isLoading }] = useLogOutMutation();
   const handleCreateEmptyPost = async () => {
     try {
@@ -75,10 +75,10 @@ const Navbar = () => {
       localStorage.clear();
       navigate("/");
       // Handle the response
-      console.log(response);
+      // console.log(response);
     } catch (err) {
       // Handle any errors
-      console.error(err);
+      // console.error(err);
     }
   };
   const navigate = useNavigate();

@@ -17,11 +17,6 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://e-learning-5rhj.onrender.com/api/v1/",
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin":
-        "https://playful-medovik-ce857d.netlify.app",
-    },
   }),
   tagTypes: ["user", "TeachingCourse"],
 

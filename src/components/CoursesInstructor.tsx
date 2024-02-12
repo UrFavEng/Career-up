@@ -7,6 +7,7 @@ import {
 } from "../store/apislice";
 import { TeachingCourses } from ".";
 import { TeachingCourse } from "../types/types.model";
+import { img3 } from "../assests";
 // import { useNavigate } from "react-router-dom";
 
 const CoursesInstructor = () => {
@@ -175,6 +176,22 @@ const CoursesInstructor = () => {
             <TeachingCourses Courses={e} />
           </div>
         ))}
+      </div>
+      <div className=" flex flex-col md:flex-row items-center md:items-left justify-center border-2 shadow-md p-4 mb-6">
+        <div className=" min-w-[300px] sm:min-w-[350px]">
+          <img src={img3} alt="" className=" w-full" />
+        </div>
+        <div className=" flex text-center  md:text-left flex-col items-center md:items-start  justify-between min-h-[120px]">
+          <h1 className=" font-bold text-[26px] text-accent-1">
+            Establish an Inspiring Path of Learning.
+          </h1>
+          <p className=" text-[#696868] w-[95%] sm:w-[80%]">
+            Get ready to inspire and motivate students, building a bright future
+            for them by launching a new course that carries the seed of change
+            and creativity. Start today and be part of the amazing journey of
+            education!
+          </p>
+        </div>
       </div>
     </div>
   );

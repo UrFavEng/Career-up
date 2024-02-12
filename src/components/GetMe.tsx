@@ -92,6 +92,7 @@ const GetMe = () => {
       submitFormData(formData)
         .unwrap()
         .then((fulfilled) => {
+          console.log(fulfilled);
           localStorage.setItem(
             "fullnameUserCareerup",
             fulfilled?.payload?.user?.fullname

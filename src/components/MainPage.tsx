@@ -19,7 +19,7 @@ const MainPage = () => {
   const { data: getHome, isLoading: LoadingHome } = useGetHomeQuery();
   const { data: dataUser, error: errGetme } = useGetmeQuery();
 
-  console.log(getHome, LoadingHome);
+  // console.log(getHome, LoadingHome);
   const splideOptions = {
     perMove: 1,
     rewind: true,
@@ -165,7 +165,7 @@ const MainPage = () => {
   }
 
   const randomQuotes = getRandomQuotes();
-  console.log(randomQuotes);
+  // console.log(randomQuotes);
   return (
     <div>
       {" "}

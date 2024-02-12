@@ -18,7 +18,7 @@ const Instructor = () => {
               alt=""
             />
           </div>
-          <div className="cat border-[1px] absolute z-40 shadow-md left-[-200px] top-[45px] md:left-[-210px] lg:left-[-220px] xl:left-[-220px] md:top-[44px] lg:top-[40px] xl:top-[40px]">
+          <div className="cat border-[1px] absolute z-40 shadow-md left-[-200px] top-[45px] md:left-[-210px] lg:left-[-220px] xl:left-[-170px] md:top-[44px] lg:top-[40px] xl:top-[44px]">
             <ul className=" bg-white">
               <li
                 onClick={() => {

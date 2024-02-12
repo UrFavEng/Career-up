@@ -17,7 +17,7 @@ const Signup = () => {
 
   const onSubmit: SubmitHandler<UserSignUP> = (data) => {
     setErr("");
-    console.log(data);
+    // console.log(data);
     signUP(data)
       .unwrap()
       .then((fulfilled) => {
