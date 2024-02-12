@@ -57,11 +57,11 @@ const Navbar = () => {
     sweetAlertbeInstructor();
     beInstructor()
       .unwrap()
-      .then((fulfilled) => {
+      .then(() => {
         sweetAlertDone();
         // console.log(fulfilled.payload.user.role);
       })
-      .catch((rejected) => {
+      .catch(() => {
         // console.log(rejected);
       });
   };
@@ -75,7 +75,7 @@ const Navbar = () => {
       localStorage.clear();
       navigate("/");
       // Handle the response
-      // console.log(response);
+      console.log(response);
     } catch (err) {
       // Handle any errors
       // console.error(err);

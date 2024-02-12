@@ -16,7 +16,7 @@ import { useGetHomeQuery, useGetmeQuery } from "../store/apislice";
 import { Course } from ".";
 import Qoute from "./Qoute";
 const MainPage = () => {
-  const { data: getHome, isLoading: LoadingHome } = useGetHomeQuery();
+  const { data: getHome } = useGetHomeQuery();
   const { data: dataUser, error: errGetme } = useGetmeQuery();
 
   // console.log(getHome, LoadingHome);
