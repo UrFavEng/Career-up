@@ -1,4 +1,6 @@
-import React from "react";
+import * as React from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";

@@ -103,8 +103,8 @@ const CourseLandingPage = () => {
     formData.append("level", data.level as string);
     formData.append("categoryId", String(data.categoryId));
 
-    formData.append("prerequisites[]", data.prerequisites);
-    formData.append("outline[]", data.outline);
+    formData.append("prerequisites[]", JSON.stringify(data.prerequisites));
+    formData.append("outline[]", JSON.stringify(data.outline));
 
     const entriesArray = Array.from(formData.entries());
     console.log(entriesArray);

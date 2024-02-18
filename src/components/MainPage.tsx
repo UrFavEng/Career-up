@@ -1,11 +1,7 @@
 import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css";
 import { FaSearch } from "react-icons/fa";
 import Swal from "sweetalert2";
-
-import "@splidejs/react-splide/css";
-import "@splidejs/react-splide/css/skyblue";
-import "@splidejs/react-splide/css/sea-green";
-import "@splidejs/react-splide/css/core";
 import {
   mainPage1,
   mainPage2,
@@ -21,6 +17,7 @@ import {
 import { Course } from ".";
 import Qoute from "./Qoute";
 import { useNavigate } from "react-router-dom";
+
 const MainPage = () => {
   const navigate = useNavigate();
 
@@ -218,10 +215,10 @@ const MainPage = () => {
   };
   return (
     <div>
-      {" "}
       <div className="HeroSec container h-[70vh] overflow-hidden sm:h-[500px] md:h-auto flex flex-col justify-center">
-        {" "}
-        <Splide aria-label="My Favorite Images" options={splideOptions}>
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+        {/* @ts-ignore */}
+        <Splide options={splideOptions}>
           <SplideSlide>
             <div className=" relative justify-center items-center  flex  flex-col-reverse ">
               <img
@@ -315,6 +312,8 @@ const MainPage = () => {
           Pick Your Courses: A Curated List of Recommended Courses for You
         </h3>
         <div className=" hidden xl:block">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoXL}
@@ -327,6 +326,8 @@ const MainPage = () => {
           </Splide>
         </div>
         <div className=" hidden lg:block xl:hidden">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoLG}
@@ -339,6 +340,8 @@ const MainPage = () => {
           </Splide>
         </div>
         <div className=" hidden md:block lg:hidden">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoMD}
@@ -351,6 +354,8 @@ const MainPage = () => {
           </Splide>
         </div>
         <div className=" block md:hidden">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoSM}
@@ -368,6 +373,8 @@ const MainPage = () => {
           Discover the Hottest Courses: Bestsellers for Success{" "}
         </h3>
         <div className=" hidden xl:block">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoXL}
@@ -380,6 +387,8 @@ const MainPage = () => {
           </Splide>
         </div>
         <div className=" hidden lg:block xl:hidden">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoLG}
@@ -392,6 +401,8 @@ const MainPage = () => {
           </Splide>
         </div>
         <div className=" hidden md:block lg:hidden">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoMD}
@@ -404,6 +415,8 @@ const MainPage = () => {
           </Splide>
         </div>
         <div className=" block md:hidden">
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-ignore */}
           <Splide
             aria-label="recomendation-course"
             options={splideOptionsRecoSM}
