@@ -1,12 +1,23 @@
 import { MdNotifications } from "react-icons/md";
 
-import { useGetmeQuery } from "../store/apislice";
+import { useGetmeQuery, useLogOutMutation } from "../store/apislice";
 import { Outlet, useNavigate } from "react-router-dom";
 const Instructor = () => {
   const navigate = useNavigate();
 
   const { data: dataUser } = useGetmeQuery();
-
+  const [LogOut] = useLogOutMutation();
+  const handleCreateEmptyPost = async () => {
+    try {
+      const response = await LogOut();
+      localStorage.clear();
+      navigate("/");
+      console.log(response);
+    } catch (err) {
+      // Handle any errors
+      // console.error(err);
+    }
+  };
   return (
     <div className=" min-h-[100vh] bg-background">
       <div className=" flex flex-row-reverse gap-4 py-6 px-8 items-center">
@@ -18,7 +29,7 @@ const Instructor = () => {
               alt=""
             />
           </div>
-          <div className="cat border-[1px] absolute z-40 shadow-md left-[-200px] top-[45px] md:left-[-210px] lg:left-[-220px] xl:left-[-170px] md:top-[44px] lg:top-[40px] xl:top-[44px]">
+          <div className="cat w-[240px] border-[1px] absolute z-40 shadow-md left-[-180px] top-[45px] md:left-[-180px] lg:left-[-180px] xl:left-[-170px] md:top-[44px] lg:top-[40px] xl:top-[44px]">
             <ul className=" bg-white">
               <li
                 onClick={() => {
@@ -47,31 +58,42 @@ const Instructor = () => {
                   </div>
                 </div>
               </li>
-              <li className=" border-b-2 hover:bg-[#f0f0f0] p-3 text-text font-bold hover:text-[#000]">
+              <li
+                onClick={() => navigate("/")}
+                className=" cursor-pointer border-b-2 hover:bg-[#f0f0f0] p-3 text-text font-bold hover:text-[#000]"
+              >
                 Student
               </li>
-              <li className="hover:bg-[#f0f0f0]  border-b-2 p-3 text-text font-bold hover:text-[#000]">
+              <li className="hover:bg-[#f0f0f0] cursor-pointer  border-b-2 p-3 text-text font-bold hover:text-[#000]">
                 Notifications
               </li>
-              <li className="hover:bg-[#f0f0f0] px-3 py-2 text-text font-bold hover:text-[#000]">
+              <li className="hover:bg-[#f0f0f0] cursor-pointer px-3 py-2 text-text font-bold hover:text-[#000]">
                 Public profile
               </li>
-              <li className="hover:bg-[#f0f0f0]  border-b-2 px-3 py-2 text-text font-bold hover:text-[#000]">
+              <li className="hover:bg-[#f0f0f0] cursor-pointer  border-b-2 px-3 py-2 text-text font-bold hover:text-[#000]">
                 Edit profile
               </li>
-              <li className="px-3 cursor-pointer hover:bg-secondary p-3 text-primary font-bold text-[18px]">
+              <li
+                onClick={() => {
+                  handleCreateEmptyPost();
+                }}
+                className="px-3 cursor-pointer hover:bg-secondary p-3 text-primary font-bold text-[18px]"
+              >
                 Log out
               </li>
             </ul>
           </div>
         </div>
-        <div className=" par-cat  relative text-[30px] text-primary">
+        <div className=" par-cat cursor-pointer  relative text-[30px] text-primary">
           <MdNotifications />
           <div className=" absolute cat w-[300px] font-bold text-text hover:text-black text-[18px] p-4 left-[-180px] text-center bg-secondary  shadow-xl leading-[20px]">
             الباك اند لسه معملهاش.
           </div>
         </div>
-        <div className=" par-cat relative text-[18px] font-medium text-text hover:text-black">
+        <div
+          onClick={() => navigate("/")}
+          className=" cursor-pointer par-cat relative text-[18px] font-medium text-text hover:text-black"
+        >
           Student
           <div className=" absolute cat w-[300px] font-bold text-text hover:text-black text-[18px] p-4 left-[-180px] text-center bg-secondary  shadow-xl leading-[20px]">
             Switch to the student view here - get back to the courses you’re

@@ -70,11 +70,9 @@ const Navbar = () => {
   const [LogOut, { isLoading }] = useLogOutMutation();
   const handleCreateEmptyPost = async () => {
     try {
-      // Call the mutation function without any data
       const response = await LogOut();
       localStorage.clear();
       navigate("/");
-      // Handle the response
       console.log(response);
     } catch (err) {
       // Handle any errors

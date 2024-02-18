@@ -11,6 +11,8 @@ import {
   AddCoursereq,
   AddCourseres,
   teacingCoursesRes,
+  GetCourseRes,
+  UpdataCourseRes,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -27,7 +29,7 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["user", "TeachingCourse"],
     }),
     beInstructor: builder.mutation<UpgradeResponsebeInstructor, void>({
       query: () => ({ url: "users/becomeInstructor", method: "PUT" }),
@@ -35,14 +37,14 @@ export const apiSlice = createApi({
     }),
     signin: builder.mutation<CreateUserResponse, UserSignin>({
       query: (body) => ({ url: "users/login", method: "POST", body }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["user", "TeachingCourse"],
     }),
     logOut: builder.mutation<LogoutResponse, void>({
       query: () => ({
         url: "users/logout",
         method: "POST",
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["user", "TeachingCourse"],
     }),
     AddCourse: builder.mutation<AddCourseres, AddCoursereq>({
       query: (body) => ({
@@ -74,6 +76,21 @@ export const apiSlice = createApi({
     getHome: builder.query<getHome, void>({
       query: () => `/courses/home`,
     }),
+    getCourseByid: builder.query<GetCourseRes, string | undefined>({
+      query: (id) => `courses/getCourseById/${id}`,
+      providesTags: ["TeachingCourse"],
+    }),
+    editCourseData: builder.mutation<
+      UpdataCourseRes,
+      { formData: FormData; id: string | number | undefined }
+    >({
+      query: ({ formData, id }) => ({
+        url: `/courses/updateCourse/${id}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
   }),
 });
 
@@ -90,4 +107,6 @@ export const {
   useBeInstructorMutation,
   useAddCourseMutation,
   useTeachingCoursesQuery,
+  useGetCourseByidQuery,
+  useEditCourseDataMutation,
 } = apiSlice;

@@ -1,6 +1,7 @@
-// @ts-ignore
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { FaSearch } from "react-icons/fa";
+import Swal from "sweetalert2";
+
 import "@splidejs/react-splide/css";
 import "@splidejs/react-splide/css/skyblue";
 import "@splidejs/react-splide/css/sea-green";
@@ -12,10 +13,17 @@ import {
   mainPage2min,
   instructor,
 } from "../assests";
-import { useGetHomeQuery, useGetmeQuery } from "../store/apislice";
+import {
+  useBeInstructorMutation,
+  useGetHomeQuery,
+  useGetmeQuery,
+} from "../store/apislice";
 import { Course } from ".";
 import Qoute from "./Qoute";
+import { useNavigate } from "react-router-dom";
 const MainPage = () => {
+  const navigate = useNavigate();
+
   const { data: getHome } = useGetHomeQuery();
   const { data: dataUser, error: errGetme } = useGetmeQuery();
 
@@ -165,7 +173,49 @@ const MainPage = () => {
   }
 
   const randomQuotes = getRandomQuotes();
-  // console.log(randomQuotes);
+  const sweetAlertDone = () => {
+    Swal.fire({
+      icon: "success",
+      title: "You'r an Instructor now",
+    });
+  };
+  const [beInstructor] = useBeInstructorMutation();
+  const sweetAlertbeInstructor = () => {
+    let timerInterval: NodeJS.Timeout | null = null; // تعيين قيمة افتراضية مناسبة
+
+    Swal.fire({
+      title: "Auto close alert!",
+      html: "I will close in <b></b> milliseconds.",
+      timer: 9000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const timer = Swal.getPopup()?.querySelector("b"); // Use optional chaining here
+        if (timer) {
+          timerInterval = setInterval(() => {
+            timer.textContent = `${Swal.getTimerLeft()}`;
+          }, 100);
+        }
+      },
+      willClose: () => {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+        }
+      },
+    }).then(() => {});
+  };
+  const beInstructorFunc = async () => {
+    sweetAlertbeInstructor();
+    beInstructor()
+      .unwrap()
+      .then(() => {
+        sweetAlertDone();
+        // console.log(fulfilled.payload.user.role);
+      })
+      .catch(() => {
+        // console.log(rejected);
+      });
+  };
   return (
     <div>
       {" "}
@@ -366,18 +416,24 @@ const MainPage = () => {
           </Splide>
         </div>
       </div>
-      <div className=" bg-white  shadow-2xl pt-6 pb-16 flex justify-center items-center">
-        <div className="  container lg:w-[65%] flex flex-col lg:flex-row lg:items-center gap-10 lg:justify-center">
+      <div className="bg-white shadow-2xl pt-6 pb-16 flex justify-center items-center">
+        <div className="  container lg:w-[75%] flex flex-col lg:flex-row lg:items-center gap-10 lg:justify-center">
           <div className=" flex justify-center">
-            <img src={instructor} alt="" className="  w-[550px] lg:w-auto" />
+            <img
+              src={instructor}
+              alt=""
+              className="  min:w-[550px] lg:w-auto"
+            />
           </div>
           <div className=" lg:w-[68%] flex lg:block flex-col items-center">
-            <h2 className=" text-center lg:text-left text-text  text-[32px] lg:text-[32px] xl:text-[40px] font-bold mb-2 lg:mb-4 leading-8">
+            <h2 className=" text-center lg:text-left text-text  text-[32px] lg:text-[32px] xl:text-[40px] font-bold mb-2  lg:mb-2 xl:mb-4 leading-8">
               {dataUser?.payload.role === "instructor" &&
               !dataUser?.error &&
-              !errGetme
-                ? "Start teaching now"
-                : "Become an instructor "}
+              !errGetme ? (
+                <div>Start teaching now</div>
+              ) : (
+                "Become an instructor "
+              )}
             </h2>
             <p className=" text-accent-1 font-meium tracking-[-1px] text-[20px] leading-6 md:leading-7 text-center lg:text-left mb-2 md:mb-4 w-[95%] sm:w-[85%] lg:w-[90%]">
               {dataUser?.payload.role === "instructor" &&
@@ -387,7 +443,24 @@ const MainPage = () => {
                 : "Instructors from around the world teach millions of learners on Career up. We provide the tools and skills to teach what you love."}
             </p>
             <p className=" cursor-pointer bg-text w-fit py-2 xl:py-3 px-2 xl:px-2 text-white hover:text-secondary font-medium text-[16px] xl:text-[18px] mt-2 sm:mt-5">
-              Start teaching today
+              {dataUser?.payload.role === "instructor" &&
+              !dataUser?.error &&
+              !errGetme ? (
+                <div onClick={() => navigate("/instructor")}>
+                  Start teaching today
+                </div>
+              ) : (
+                <div
+                  onClick={() =>
+                    !dataUser?.error && !errGetme
+                      ? beInstructorFunc()
+                      : navigate("/login")
+                  }
+                >
+                  {" "}
+                  Start teaching today
+                </div>
+              )}
             </p>
           </div>
         </div>

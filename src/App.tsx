@@ -2,7 +2,10 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   AccountSecurity,
+  CourseLandingPage,
   CoursesInstructor,
+  Curriculum,
+  EditCourse,
   Footer,
   GetMe,
   Home,
@@ -32,6 +35,10 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/instructor" element={<Instructor />}>
           <Route index element={<CoursesInstructor />} />
+          <Route path="edit-course/:id" element={<EditCourse />}>
+            <Route index element={<CourseLandingPage />} />
+            <Route path="Curriculum" element={<Curriculum />} />
+          </Route>
         </Route>
       </Routes>
       <Footer />

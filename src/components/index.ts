@@ -11,6 +11,9 @@ import Qoute from "./Qoute.tsx";
 import Instructor from "./Instructor.tsx";
 import CoursesInstructor from "./CoursesInstructor.tsx";
 import TeachingCourses from "./TeachingCourses.tsx";
+import EditCourse from "./EditCourse.tsx";
+import CourseLandingPage from "./CourseLandingPage.tsx";
+import Curriculum from "./Curriculum.tsx";
 export {
   Navbar,
   Footer,
@@ -25,4 +28,7 @@ export {
   Instructor,
   CoursesInstructor,
   TeachingCourses,
+  EditCourse,
+  CourseLandingPage,
+  Curriculum,
 };

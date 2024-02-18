@@ -233,3 +233,163 @@ export interface teacingCoursesRes {
   payload: teacingCoursesPayload;
 }
 // teaching Courses end
+//get course by id
+interface GetCourseResCourse {
+  id: number;
+  previewVideoUrl: string | null;
+  thumbnailUrl: string;
+  title: string;
+  subtitle: string | null;
+  desc: string | null;
+  beneficiaries: string | null;
+  outline: string[] | null;
+  prerequisites: string[] | null;
+  price: number | null;
+  allowPoints: boolean;
+  status: string;
+  lang: string;
+  level: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  categoryId: number;
+  totalReviewsRate: number | null;
+  totalLength: string | null;
+  numOfVideos: string;
+  numOfSections: string;
+  teachers: GetCourseResTeacher[];
+  sections: any[];
+  reviews: any[];
+  category: GetCourseResCategory;
+  favorites: any[];
+  carts: any[];
+  numOfEnrolledStudents: number;
+  numOfCourseReviews: number;
+  publicVideos: {
+    sections: any[]; // You might want to define a type for sections
+  };
+  isEnrolled: boolean;
+}
+
+interface GetCourseResTeacher {
+  id: number;
+  fullname: string;
+  email: string;
+  password: string;
+  role: string;
+  gender: string | null;
+  bio: string | null;
+  avatarUrl: string;
+  phoneNum: string | null;
+  points: number;
+  job: string | null;
+  websiteUrl: string | null;
+  facebookUrl: string | null;
+  twitterUrl: string | null;
+  youtubeUrl: string | null;
+  linkedinUrl: string | null;
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  courseTeacher: {
+    courseId: number;
+    teacherId: number;
+  };
+  numOfTeachingCourses: number;
+  totalStudentsEnrolled: string;
+  totalReviews: string;
+}
+
+interface GetCourseResCategory {
+  id: number;
+  categoryName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GetCourseRes {
+  error: boolean;
+  message: string;
+  payload: {
+    course: GetCourseResCourse;
+  };
+}
+//end get course by id
+// updata corse
+interface UpdataCourse {
+  id: number;
+  previewVideoUrl: string | null;
+  thumbnailUrl: string;
+  title: string;
+  subtitle: string;
+  desc: string;
+  beneficiaries: string[] | null;
+  outline: string[];
+  prerequisites: string[];
+  price: number;
+  allowPoints: boolean;
+  status: string;
+  lang: string;
+  level: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  categoryId: number;
+  totalReviewsRate: number | null;
+  totalLength: number | null;
+  numOfVideos: string;
+  numOfSections: string;
+  teachers: UpdataCourseTeacher[];
+  sections: any[]; // You may want to define an interface for sections
+  reviews: any[]; // You may want to define an interface for reviews
+  category: UpdataCourseCategory;
+  favorites: any[]; // You may want to define an interface for favorites
+  carts: any[]; // You may want to define an interface for carts
+}
+
+interface UpdataCourseTeacher {
+  id: number;
+  fullname: string;
+  email: string;
+  password: string;
+  role: string;
+  gender: string | null;
+  bio: string | null;
+  avatarUrl: string;
+  phoneNum: string | null;
+  points: number;
+  job: string | null;
+  websiteUrl: string | null;
+  facebookUrl: string | null;
+  twitterUrl: string | null;
+  youtubeUrl: string | null;
+  linkedinUrl: string | null;
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  courseTeacher: {
+    courseId: number;
+    teacherId: number;
+  };
+}
+
+interface UpdataCourseCategory {
+  id: number;
+  categoryName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface UpdataCoursePayload {
+  course: UpdataCourse;
+  numOfUpdatedRow: number;
+}
+
+export interface UpdataCourseRes {
+  error: boolean;
+  message: string;
+  payload: UpdataCoursePayload;
+}
+// end updata corse

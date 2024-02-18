@@ -129,3 +129,10 @@ html {
 .div-EditCourse:hover div {
   display: flex !important;
 }
+
+.Nav-EditCourse a:hover {
+  color: #ec5252;
+}
+.Nav-EditCourse a.active {
+  color: #ec5252;
+}
