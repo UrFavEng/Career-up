@@ -23,8 +23,7 @@ const MainPage = () => {
 
   const { data: getHome } = useGetHomeQuery();
   const { data: dataUser, error: errGetme } = useGetmeQuery();
-
-  // console.log(getHome, LoadingHome);
+  console.log(getHome);
   const splideOptions = {
     perMove: 1,
     rewind: true,

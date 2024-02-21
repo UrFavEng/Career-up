@@ -3,6 +3,7 @@ import "./App.css";
 import {
   AccountSecurity,
   CourseLandingPage,
+  CoursesByCat,
   CoursesInstructor,
   Curriculum,
   EditCourse,
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}>
           <Route index element={<MainPage />} />
+          <Route path="courses/:catid/:catname" element={<CoursesByCat />} />
         </Route>
         <Route path="/myprofile/:id" element={<GetMe />} />
         <Route

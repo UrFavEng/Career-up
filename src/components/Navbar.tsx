@@ -106,6 +106,9 @@ const Navbar = () => {
                   <ul className=" w-[200px] bg-secondary mt-[25px]">
                     {cats?.map((e) => (
                       <li
+                        onClick={() =>
+                          navigate(`courses/${e.id}/${e.categoryName}`)
+                        }
                         key={e.id}
                         className="cursor-pointer h-[35px] font-medium text-[14px] tracking-[0.5px] flex justify-between items-center px-[18px] border-b-background border-b-[1px] hover:text-[#686868]"
                       >
@@ -245,6 +248,11 @@ const Navbar = () => {
                                 <>
                                   {cats?.map((e) => (
                                     <li
+                                      onClick={() =>
+                                        navigate(
+                                          `courses/${e.id}/${e.categoryName}`
+                                        )
+                                      }
                                       key={e.id}
                                       className="cursor-pointer h-[33px] font-medium text-[14px] tracking-[0.5px] flex justify-between items-center px-[18px] border-b-background border-b-[1px] text-black hover:text-[#686868]"
                                     >
@@ -524,7 +532,11 @@ const Navbar = () => {
         <ul className=" flex justify-center items-center gap-4">
           {allCats?.payload?.categories.map((e) => {
             return (
-              <li className=" cursor-pointer hover:text-[#686868]" key={e.id}>
+              <li
+                onClick={() => navigate(`courses/${e.id}/${e.categoryName}`)}
+                className=" cursor-pointer hover:text-[#686868]"
+                key={e.id}
+              >
                 {e.categoryName}
               </li>
             );
