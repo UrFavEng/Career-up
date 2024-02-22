@@ -9,13 +9,15 @@ import { TeachingCourses } from ".";
 import { TeachingCourse } from "../types/types.model";
 import { img3 } from "../assests";
 // import { useNavigate } from "react-router-dom";
+import { Hourglass } from "react-loader-spinner";
+import Swal from "sweetalert2";
 
 const CoursesInstructor = () => {
-  // const navigate = useNavigate();
-  const [show, setShow] = useState<boolean>(false); // نوع الحالة هنا هو number
-  const [addCourse] = useAddCourseMutation();
+  const [show, setShow] = useState<boolean>(false);
+  const [addCourse, { isLoading: addCourseLoading }] = useAddCourseMutation();
   const { data: allCats } = useGetAllCatsQuery();
-  const { data: teachingCoursesRes } = useTeachingCoursesQuery();
+  const { data: teachingCoursesRes, isLoading: teachingCourseLoading } =
+    useTeachingCoursesQuery();
   const teachingAllCourses = teachingCoursesRes?.payload.teachingCourses;
   console.log(teachingAllCourses);
   const [sortBy, setSortBy] = useState<string>("newest");
@@ -54,6 +56,22 @@ const CoursesInstructor = () => {
       course.course.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const sortedCourses = sortCourses(filteredCourses || [], sortBy);
+  const handleSuccess = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Done",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+  const handleErr = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+    });
+  };
   const HandleAddCourse = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const targetForm = e.target as HTMLFormElement;
@@ -69,8 +87,12 @@ const CoursesInstructor = () => {
       .unwrap()
       .then((fulfilled) => {
         console.log(fulfilled);
+
+        handleSuccess();
       })
       .catch((rejected) => {
+        handleErr();
+
         console.log(rejected);
       });
   };
@@ -162,20 +184,50 @@ const CoursesInstructor = () => {
               </option>
             ))}
           </select>
-          <input
-            type="submit"
-            value="Add"
-            className=" hover:text-secondary w-[20%] sm:w-auto text-white py-2 px-5 bg-[#EC5252] hover:bg-[#e74242] text-[18px] h-[40px] font-bold "
-          />
+          {addCourseLoading ? (
+            <div className=" px-3">
+              <Hourglass
+                visible={true}
+                height="35"
+                width="35"
+                ariaLabel="hourglass-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                colors={["#EC5252", "#ec525252"]}
+              />
+            </div>
+          ) : (
+            <input
+              type="submit"
+              value="Add"
+              className=" hover:text-secondary w-[20%] sm:w-auto text-white py-2 px-5 bg-[#EC5252] hover:bg-[#e74242] text-[18px] h-[40px] font-bold "
+            />
+          )}
         </form>
       </div>
       <div className=" flex flex-col gap-3 pb-6 pt-2 sm:pt-6">
-        {sortedCourses.map((e) => (
-          <div key={e.courseId}>
-            {" "}
-            <TeachingCourses Courses={e} />
+        {teachingCourseLoading ? (
+          <div className=" py-8 flex items-center justify-center">
+            <Hourglass
+              visible={true}
+              height="100"
+              width="100"
+              ariaLabel="hourglass-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              colors={["#EC5252", "#ec525252"]}
+            />
           </div>
-        ))}
+        ) : (
+          <>
+            {sortedCourses.map((e) => (
+              <div key={e.courseId}>
+                {" "}
+                <TeachingCourses Courses={e} />
+              </div>
+            ))}
+          </>
+        )}
       </div>
       <div className=" flex flex-col md:flex-row items-center md:items-left justify-center border-2 shadow-md p-4 mb-6">
         <div className=" min-w-[300px] sm:min-w-[350px]">

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-
+import Swal from "sweetalert2";
 import {
   useEditCourseDataMutation,
   // useEditCourseDataMutation,
@@ -8,6 +8,7 @@ import {
 } from "../store/apislice";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { Hourglass } from "react-loader-spinner";
 type FormValues = {
   title: string;
   subtitle: string | null;
@@ -24,8 +25,7 @@ type FormValues = {
 const CourseLandingPage = () => {
   const { id } = useParams<{ id: string | undefined }>();
 
-  const { data } = useGetCourseByidQuery(id);
-  // console.log(data?.payload.course.prerequisites);
+  const { data, isLoading: getCourseLoading } = useGetCourseByidQuery(id);
   const {
     handleSubmit,
     setValue,
@@ -83,7 +83,24 @@ const CourseLandingPage = () => {
     ];
     setValue("outline", updatedOutline);
   };
-  const [editCourseData] = useEditCourseDataMutation();
+  const handleSuccess = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Done",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+  const handleErr = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+    });
+  };
+  const [editCourseData, { isLoading: editCourseLoading }] =
+    useEditCourseDataMutation();
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const formData = new FormData();
     if (data.thumbnail && data.thumbnail.length > 0) {
@@ -102,9 +119,12 @@ const CourseLandingPage = () => {
     formData.append("lang", data.lang as string);
     formData.append("level", data.level as string);
     formData.append("categoryId", String(data.categoryId));
-
-    formData.append("prerequisites[]", JSON.stringify(data.prerequisites));
-    formData.append("outline[]", JSON.stringify(data.outline));
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    formData.append("prerequisites[]", data.prerequisites);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    formData.append("outline[]", data.outline);
 
     const entriesArray = Array.from(formData.entries());
     console.log(entriesArray);
@@ -113,8 +133,10 @@ const CourseLandingPage = () => {
         .unwrap()
         .then((fulfilled) => {
           console.log(fulfilled);
+          handleSuccess();
         })
         .catch((rejected) => {
+          handleErr();
           console.log(rejected);
         });
     }
@@ -138,249 +160,287 @@ const CourseLandingPage = () => {
         onSubmit={handleSubmit(onSubmit)}
         className=" py-4 flex-col gap-3 flex"
       >
-        <div className=" flex flex-col">
-          <label
-            htmlFor="title"
-            className="cursor-pointer text-[20px] font-semibold text-[#383838]"
-          >
-            Title
-          </label>
-
-          <input
-            type="text"
-            id="title"
-            placeholder="Insert your course title"
-            {...register("title", { required: "Title is required" })}
-            className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-          />
-        </div>
-        <div className=" flex flex-col">
-          <label
-            htmlFor="subtitle"
-            className="cursor-pointer text-[20px] font-semibold text-[#383838]"
-          >
-            Subtitle
-          </label>
-          <input
-            {...register("subtitle")}
-            type="text"
-            id="subtitle"
-            placeholder="Insert your course subtitle"
-            className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-          />
-        </div>
-        <div className=" flex flex-col">
-          <label
-            htmlFor="description"
-            className=" cursor-pointer text-[20px] font-semibold text-[#383838]"
-          >
-            Course description
-          </label>
-          <textarea
-            {...register("desc")}
-            id="description"
-            placeholder="Insert your course description"
-            className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-          />
-        </div>
-        <div>
-          <h3 className=" text-[20px] font-semibold text-[#383838]">
-            Basic info
-          </h3>
-          <div className=" flex justify-between  flex-col sm:flex-row gap-4 sm:gap-0">
-            <select
-              {...register("lang")}
-              title="Language"
-              className=" pl-2 sm:w-[30%] font-medium text-[18px] shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-            >
-              <option value="ar">Arabic</option>
-              <option value="en">English</option>
-            </select>
-            <select
-              {...register("level")}
-              title="Level"
-              className=" pl-2 sm:w-[30%] font-medium text-[18px] shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-            >
-              <option value="beginner">Beginner</option>
-              <option value="advanced">Advanced</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="all levels">All Levels</option>
-            </select>
-            <select
-              {...register("categoryId")}
-              title="Category"
-              className=" pl-2 sm:w-[30%] font-medium text-[18px] shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-            >
-              {allCats?.payload.categories.map((cat) => (
-                <option value={cat.id} key={cat.id}>
-                  {cat.categoryName}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="  flex justify-between  gap-3 md:gap-0 flex-col md:flex-row">
-          <div className=" flex flex-col md:w-[30%]">
+        {getCourseLoading ? (
+          <div className=" py-8 flex justify-center items-center">
             {" "}
-            <label
-              htmlFor="price"
-              className="cursor-pointer text-[20px] font-semibold text-[#383838]"
-            >
-              Price
-            </label>
-            <input
-              {...register("price")}
-              type="text"
-              id="price"
-              placeholder="Insert your course price"
-              className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+            <Hourglass
+              visible={true}
+              height="100"
+              width="100"
+              ariaLabel="hourglass-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              colors={["#EC5252", "#ec525252"]}
             />
           </div>
-          <div className=" flex flex-col md:w-[65%]">
-            <label
-              htmlFor=""
-              className=" text-[20px] font-semibold text-[#383838]"
-            >
-              List of required qualifications
-            </label>
-            <div className="flex flex-col gap-1">
-              {prerequisites.map((prerequisite, index) => (
-                <div className="flex justify-between items-center" key={index}>
-                  <input
-                    className="focus:shadow-primary w-[78%] sm:w-[85%] lg:w-[90%] focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-                    {...register(`prerequisites.${index}` as const)}
-                    defaultValue={prerequisite}
-                  />
-                  {prerequisites.length > 1 && (
-                    <button
-                      className="text-primary font-semibold text-[18px]"
-                      type="button"
-                      onClick={() => removePrerequisite(index)}
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                className="text-[18px] w-fit font-semibold text-accent-1 hover:text-black mt-2 py-1 px-2 bg-secondary rounded-md"
-                onClick={addPrerequisite}
+        ) : (
+          <>
+            <div className=" flex flex-col">
+              <label
+                htmlFor="title"
+                className="cursor-pointer text-[20px] font-semibold text-[#383838]"
               >
-                Add Prerequisite
-              </button>
+                Title
+              </label>
+
+              <input
+                type="text"
+                id="title"
+                placeholder="Insert your course title"
+                {...register("title", { required: "Title is required" })}
+                className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+              />
             </div>
-          </div>
-        </div>
-        <div className=" flex flex-col">
-          <label
-            htmlFor=""
-            className=" text-[20px] font-semibold text-[#383838]"
-          >
-            What will students learn in your course?
-          </label>
-          <div className="flex flex-col gap-1">
-            {outline.map((element, index) => (
-              <div className="flex justify-between items-center" key={index}>
-                <input
-                  className="focus:shadow-primary w-[78%] sm:w-[90%] lg:w-[93.5%] focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-                  {...register(`outline.${index}` as const)}
-                  defaultValue={element}
-                />
-                {outline.length > 1 && (
-                  <button
-                    className="text-primary font-semibold text-[18px]"
-                    type="button"
-                    onClick={() => removeOutline(index)}
-                  >
-                    Remove
-                  </button>
-                )}
+            <div className=" flex flex-col">
+              <label
+                htmlFor="subtitle"
+                className="cursor-pointer text-[20px] font-semibold text-[#383838]"
+              >
+                Subtitle
+              </label>
+              <input
+                {...register("subtitle")}
+                type="text"
+                id="subtitle"
+                placeholder="Insert your course subtitle"
+                className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+              />
+            </div>
+            <div className=" flex flex-col">
+              <label
+                htmlFor="description"
+                className=" cursor-pointer text-[20px] font-semibold text-[#383838]"
+              >
+                Course description
+              </label>
+              <textarea
+                {...register("desc")}
+                id="description"
+                placeholder="Insert your course description"
+                className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+              />
+            </div>
+            <div>
+              <h3 className=" text-[20px] font-semibold text-[#383838]">
+                Basic info
+              </h3>
+              <div className=" flex justify-between  flex-col sm:flex-row gap-4 sm:gap-0">
+                <select
+                  {...register("lang")}
+                  title="Language"
+                  className=" pl-2 sm:w-[30%] font-medium text-[18px] shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+                >
+                  <option value="ar">Arabic</option>
+                  <option value="en">English</option>
+                </select>
+                <select
+                  {...register("level")}
+                  title="Level"
+                  className=" pl-2 sm:w-[30%] font-medium text-[18px] shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+                >
+                  <option value="beginner">Beginner</option>
+                  <option value="advanced">Advanced</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="all levels">All Levels</option>
+                </select>
+                <select
+                  {...register("categoryId")}
+                  title="Category"
+                  className=" pl-2 sm:w-[30%] font-medium text-[18px] shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+                >
+                  {allCats?.payload.categories.map((cat) => (
+                    <option value={cat.id} key={cat.id}>
+                      {cat.categoryName}
+                    </option>
+                  ))}
+                </select>
               </div>
-            ))}
-            <button
-              type="button"
-              className="text-[18px] w-fit font-semibold text-accent-1 hover:text-black mt-2 py-1 px-2 bg-secondary rounded-md"
-              onClick={addOutline}
-            >
-              Add Prerequisite
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center sm:items-start justify-center flex-col md:flex-row gap-8 md:gap-3 w-fit">
-          <div className=" items-center sm:items-start flex flex-col-reverse sm:flex-row-reverse md:flex-col-reverse lg:flex-row-reverse gap-4 md:w-[40%] lg:w-[45%]">
-            <div className=" text-center sm:text-left">
-              <input
-                {...register("thumbnail")}
-                type="file"
-                id="file-inputt"
-                className=" outline-none border-none w-0 hidden"
-                accept="image/*"
-              />
-              <h4 className=" mb-4 text-center sm:text-left font-semibold text-[15px] leading-[17px]">
-                Upload your course image here. It must meet our course image
-              </h4>
-              <label
-                id="file-input-label"
-                htmlFor="file-inputt"
-                className="text-[20px] cursor-pointer w-fit font-bold text-accent-1 hover:text-black py-3 px-3 bg-secondary"
-              >
-                Upload File
-              </label>
             </div>
-            <img
-              src={
-                watch("thumbnail")?.[0]
-                  ? URL.createObjectURL(watch("thumbnail")?.[0])
-                  : data?.payload.course.thumbnailUrl
-              }
-              alt=""
-              className=" object-contain w-[250px]"
-            />
-          </div>
-          <div className=" items-center sm:items-start flex flex-col-reverse sm:flex-row-reverse md:flex-col-reverse lg:flex-row-reverse gap-4 md:w-[60%] lg:w-[55%]">
-            <div className=" text-center sm:text-left">
-              <input
-                {...register("previewVideo")}
-                type="file"
-                id="file-input"
-                className="outline-none border-none w-0 hidden"
-                accept="video/*"
-              />
-              <h4 className="text-center sm:text-left mb-4 font-semibold text-[15px] leading-[17px]">
-                Your promo video is a quick and compelling way for students to
-                preview what they’ll learn in your course. Students considering
-                your course are more likely to enroll if your promo video is
-                well-made
-              </h4>
-              <label
-                id="file-input-label"
-                htmlFor="file-input"
-                className="text-[20px] cursor-pointer w-fit font-bold text-accent-1 hover:text-black py-3 px-3 bg-secondary"
-              >
-                Upload File
-              </label>
+            <div className="  flex justify-between  gap-3 md:gap-0 flex-col md:flex-row">
+              <div className=" flex flex-col md:w-[30%]">
+                {" "}
+                <label
+                  htmlFor="price"
+                  className="cursor-pointer text-[20px] font-semibold text-[#383838]"
+                >
+                  Price
+                </label>
+                <input
+                  {...register("price")}
+                  type="text"
+                  id="price"
+                  placeholder="Insert your course price"
+                  className=" focus:shadow-primary focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+                />
+              </div>
+              <div className=" flex flex-col md:w-[65%]">
+                <label
+                  htmlFor=""
+                  className=" text-[20px] font-semibold text-[#383838]"
+                >
+                  List of required qualifications
+                </label>
+                <div className="flex flex-col gap-1">
+                  {prerequisites.map((prerequisite, index) => (
+                    <div
+                      className="flex justify-between items-center"
+                      key={index}
+                    >
+                      <input
+                        className="focus:shadow-primary w-[78%] sm:w-[85%] lg:w-[90%] focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+                        {...register(`prerequisites.${index}` as const)}
+                        defaultValue={prerequisite}
+                      />
+                      {prerequisites.length > 1 && (
+                        <button
+                          className="text-primary font-semibold text-[18px]"
+                          type="button"
+                          onClick={() => removePrerequisite(index)}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="text-[18px] w-fit font-semibold text-accent-1 hover:text-black mt-2 py-1 px-2 bg-secondary rounded-md"
+                    onClick={addPrerequisite}
+                  >
+                    Add Prerequisite
+                  </button>
+                </div>
+              </div>
             </div>
-            <video width="250" height="280" controls>
-              <source
-                src={
-                  watch("previewVideo")?.[0]
-                    ? URL.createObjectURL(watch("previewVideo")?.[0])
-                    : data?.payload.course.thumbnailUrl
-                }
-                type="video/mp4"
-              />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-        <div>
-          <input
-            type="submit"
-            value="Save"
-            className=" text-[22px] mt-4 font-bold  text-[#454545] hover:text-[#000] rounded-md cursor-pointer bg-primary py-2 px-6"
-          />
-        </div>
+            <div className=" flex flex-col">
+              <label
+                htmlFor=""
+                className=" text-[20px] font-semibold text-[#383838]"
+              >
+                What will students learn in your course?
+              </label>
+              <div className="flex flex-col gap-1">
+                {outline.map((element, index) => (
+                  <div
+                    className="flex justify-between items-center"
+                    key={index}
+                  >
+                    <input
+                      className="focus:shadow-primary w-[78%] sm:w-[90%] lg:w-[93.5%] focus:border-primary capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
+                      {...register(`outline.${index}` as const)}
+                      defaultValue={element}
+                    />
+                    {outline.length > 1 && (
+                      <button
+                        className="text-primary font-semibold text-[18px]"
+                        type="button"
+                        onClick={() => removeOutline(index)}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="text-[18px] w-fit font-semibold text-accent-1 hover:text-black mt-2 py-1 px-2 bg-secondary rounded-md"
+                  onClick={addOutline}
+                >
+                  Add Prerequisite
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center sm:items-start justify-center flex-col md:flex-row gap-8 md:gap-3 w-fit">
+              <div className=" items-center sm:items-start flex flex-col-reverse sm:flex-row-reverse md:flex-col-reverse lg:flex-row-reverse gap-4 md:w-[40%] lg:w-[45%]">
+                <div className=" text-center sm:text-left">
+                  <input
+                    {...register("thumbnail")}
+                    type="file"
+                    id="file-inputt"
+                    className=" outline-none border-none w-0 hidden"
+                    accept="image/*"
+                  />
+                  <h4 className=" mb-4 text-center sm:text-left font-semibold text-[15px] leading-[17px]">
+                    Upload your course image here. It must meet our course image
+                  </h4>
+                  <label
+                    id="file-input-label"
+                    htmlFor="file-inputt"
+                    className="text-[20px] cursor-pointer w-fit font-bold text-accent-1 hover:text-black py-3 px-3 bg-secondary"
+                  >
+                    Upload File
+                  </label>
+                </div>
+                <img
+                  src={
+                    watch("thumbnail")?.[0]
+                      ? URL.createObjectURL(watch("thumbnail")?.[0])
+                      : data?.payload.course.thumbnailUrl
+                  }
+                  alt=""
+                  className=" object-contain w-[250px]"
+                />
+              </div>
+              <div className=" items-center sm:items-start flex flex-col-reverse sm:flex-row-reverse md:flex-col-reverse lg:flex-row-reverse gap-4 md:w-[60%] lg:w-[55%]">
+                <div className=" text-center sm:text-left">
+                  <input
+                    {...register("previewVideo")}
+                    type="file"
+                    id="file-input"
+                    className="outline-none border-none w-0 hidden"
+                    accept="video/*"
+                  />
+                  <h4 className="text-center sm:text-left mb-4 font-semibold text-[15px] leading-[17px]">
+                    Your promo video is a quick and compelling way for students
+                    to preview what they’ll learn in your course. Students
+                    considering your course are more likely to enroll if your
+                    promo video is well-made
+                  </h4>
+                  <label
+                    id="file-input-label"
+                    htmlFor="file-input"
+                    className="text-[20px] cursor-pointer w-fit font-bold text-accent-1 hover:text-black py-3 px-3 bg-secondary"
+                  >
+                    Upload File
+                  </label>
+                </div>
+                <video width="250" height="280" controls>
+                  <source
+                    src={
+                      watch("previewVideo")?.[0]
+                        ? URL.createObjectURL(watch("previewVideo")?.[0])
+                        : data?.payload.course.thumbnailUrl
+                    }
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+            <div>
+              {editCourseLoading ? (
+                <div className=" pl-2 py-4">
+                  {" "}
+                  <Hourglass
+                    visible={true}
+                    height="30"
+                    width="30"
+                    ariaLabel="hourglass-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    colors={["#EC5252", "#ec525252"]}
+                  />
+                </div>
+              ) : (
+                <input
+                  type="submit"
+                  value="Save"
+                  className="  outline-none text-[22px] mt-4 font-bold  text-[#454545] hover:text-[#000] rounded-md cursor-pointer bg-primary py-2 px-6"
+                />
+              )}
+            </div>
+          </>
+        )}
       </form>
     </div>
   );
