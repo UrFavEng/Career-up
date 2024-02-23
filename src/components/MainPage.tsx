@@ -3,7 +3,6 @@ import "@splidejs/react-splide/css";
 import { FaSearch } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { Hourglass } from "react-loader-spinner";
-
 import {
   mainPage1,
   mainPage2,
@@ -19,10 +18,8 @@ import {
 import { Course } from ".";
 import Qoute from "./Qoute";
 import { useNavigate } from "react-router-dom";
-
 const MainPage = () => {
   const navigate = useNavigate();
-
   const { data: getHome, isLoading: getHomeLoading } = useGetHomeQuery();
   const { data: dataUser, error: errGetme } = useGetmeQuery();
   console.log(getHome);
@@ -39,31 +36,25 @@ const MainPage = () => {
   };
   const splideOptionsRecoXL = {
     perPage: 5,
+    type: "loop",
     focus: 0,
     omitEnd: true,
     gap: 10,
     pagination: false,
-  };
-  const splideOptionsRecoLG = {
-    perPage: 4,
-    focus: 0,
-    omitEnd: true,
-    gap: 10,
-    pagination: false,
-  };
-  const splideOptionsRecoMD = {
-    perPage: 3,
-    focus: 0,
-    omitEnd: true,
-    gap: 10,
-    pagination: false,
-  };
-  const splideOptionsRecoSM = {
-    perPage: 2,
-    focus: 0,
-    omitEnd: true,
-    gap: 10,
-    pagination: false,
+    breakpoints: {
+      1200: {
+        perPage: 4,
+      },
+      992: {
+        perPage: 3,
+      },
+      768: {
+        perPage: 2,
+      },
+      576: {
+        perPage: 2,
+      },
+    },
   };
   interface Quote {
     quote: string;
@@ -214,6 +205,7 @@ const MainPage = () => {
         // console.log(rejected);
       });
   };
+
   return (
     <div>
       <div className="HeroSec container h-[70vh] overflow-hidden sm:h-[500px] md:h-auto flex flex-col justify-center">
@@ -324,58 +316,16 @@ const MainPage = () => {
       ) : (
         <>
           {" "}
-          <div className=" pb-10 pt-2 container">
-            <h3 className=" px-4 mt-4 text-[26px] font-semibold tracking-[-1px] w-[90%] leading-7">
+          <div className="splid-Courses-MainPage pb-10 pt-2 container">
+            <h3 className=" px-4 mt-4 text-[24px] md:text-[26px] font-medium md:font-semibold  tracking-[-1px] w-[90%] leading-7">
               Pick Your Courses: A Curated List of Recommended Courses for You
             </h3>
-            <div className=" hidden xl:block">
+            <div className="  block">
               {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
               {/* @ts-ignore */}
               <Splide
                 aria-label="recomendation-course"
                 options={splideOptionsRecoXL}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </div>
-            <div className=" hidden lg:block xl:hidden">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoLG}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </div>
-            <div className=" hidden md:block lg:hidden">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoMD}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </div>
-            <div className=" block md:hidden">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoSM}
               >
                 {getHome?.payload.recommendations.map((e) => (
                   <SplideSlide key={e.id}>
@@ -385,58 +335,16 @@ const MainPage = () => {
               </Splide>
             </div>
           </div>
-          <div className=" pb-10 pt-2 border-t-2 container">
-            <h3 className=" px-4 mt-4 text-[26px] font-semibold tracking-[-1px] w-[90%] leading-7">
+          <div className="splid-Courses-MainPage mt-[-90px] pb-10 pt-2 border-t-2 container">
+            <h3 className=" px-4 mt-4 text-[24px] md:text-[26px] font-medium md:font-semibold tracking-[-1px] w-[90%] leading-7">
               Discover the Hottest Courses: Bestsellers for Success{" "}
             </h3>
-            <div className=" hidden xl:block">
+            <div className=" block">
               {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
               {/* @ts-ignore */}
               <Splide
                 aria-label="recomendation-course"
                 options={splideOptionsRecoXL}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </div>
-            <div className=" hidden lg:block xl:hidden">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoLG}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </div>
-            <div className=" hidden md:block lg:hidden">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoMD}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </div>
-            <div className=" block md:hidden">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoSM}
               >
                 {getHome?.payload.recommendations.map((e) => (
                   <SplideSlide key={e.id}>
@@ -448,8 +356,7 @@ const MainPage = () => {
           </div>
         </>
       )}
-
-      <div className="bg-white shadow-2xl pt-6 pb-16 flex justify-center items-center">
+      <div className="bg-white mt-[-90px] shadow-2xl pt-6 pb-16 flex justify-center items-center">
         <div className="  container lg:w-[75%] flex flex-col lg:flex-row lg:items-center gap-10 lg:justify-center">
           <div className=" flex justify-center">
             <img
