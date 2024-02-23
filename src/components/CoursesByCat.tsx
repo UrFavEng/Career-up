@@ -6,7 +6,9 @@ const CoursesByCat = () => {
 
   return (
     <div className=" container min-h-[68vh] py-4">
-      <h2 className=" font-extrabold text-[28px] text-text">{catname}</h2>
+      <h2 className=" font-extrabold text-[28px] leading-3 mt-2  text-primary tracking-[-1px]">
+        {catname}
+      </h2>
       <h5 className=" text-accent-1 text-[18px] font-medium mt-2">
         Courses to get you started
       </h5>

@@ -42,16 +42,16 @@ const MainPage = () => {
     gap: 10,
     pagination: false,
     breakpoints: {
-      1200: {
+      1280: {
         perPage: 4,
       },
-      992: {
+      1024: {
         perPage: 3,
       },
       768: {
-        perPage: 2,
+        perPage: 3,
       },
-      576: {
+      640: {
         perPage: 2,
       },
     },
@@ -301,7 +301,7 @@ const MainPage = () => {
         </div>
       </div>
       {getHomeLoading ? (
-        <div className=" py-8 flex justify-center items-center">
+        <div className=" pt-40 pb-72 flex justify-center items-center">
           {" "}
           <Hourglass
             visible={true}
