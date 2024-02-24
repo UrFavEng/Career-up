@@ -7,7 +7,7 @@ interface QouteProps {
 }
 
 const Qoute = ({ QouteData }: QouteProps) => (
-  <div className=" flex flex-col items-start justify-between bg-background py-4 px-4 flex-1 rounded-lg shadow-lg">
+  <div className=" basis-[250px] h-[160px] sm:h-[180px] flex flex-col items-start justify-between bg-background py-4 px-4 flex-1 rounded-lg shadow-lg">
     <div>
       {" "}
       <div className=" mb-2">

@@ -13,6 +13,7 @@ import {
   teacingCoursesRes,
   GetCourseRes,
   UpdataCourseRes,
+  getCoursesByCatsRes,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -91,6 +92,9 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["TeachingCourse"],
     }),
+    getCoursesByCat: builder.query<getCoursesByCatsRes, string | undefined>({
+      query: (id) => `courses/getCoursesByCategory/${id}`,
+    }),
   }),
 });
 
@@ -109,4 +113,5 @@ export const {
   useTeachingCoursesQuery,
   useGetCourseByidQuery,
   useEditCourseDataMutation,
+  useGetCoursesByCatQuery,
 } = apiSlice;

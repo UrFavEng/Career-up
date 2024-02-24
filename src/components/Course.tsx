@@ -42,7 +42,7 @@ const Course = ({ CourseData }: CourseProps) => {
     >
       <div
         className={`hidden ${
-          distanceToRight !== null && distanceToRight < 160
+          distanceToRight !== null && distanceToRight < 400
             ? "right-[60%] xl:right-[50%]"
             : "left-[60%] xl:left-[50%]"
         }  details-course md:flex gap-2   justify-between flex-col p-4 absolute top-[0px] 
@@ -69,14 +69,6 @@ const Course = ({ CourseData }: CourseProps) => {
                 </span>{" "}
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto
                 laboriosam eum laudantium a eaque! Voluptates.
-              </li>
-
-              <li className="flex gap-2">
-                <span className=" text-primary text-[16px]">
-                  <FaHandPointRight />
-                </span>{" "}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Explicabo, dolor.
               </li>
               <li className="flex gap-2">
                 <span className=" text-primary text-[16px]">

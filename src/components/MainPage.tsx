@@ -293,7 +293,7 @@ const MainPage = () => {
             Embark on a Journey of Wisdom: Motivational Quotes to Ignite Your
             Learning Adventure
           </h1>
-          <div className=" grid sm:grid-cols-2 lg:grid-cols-4 gap-4  pb-4 pt-4">
+          <div className=" hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4  pb-4 pt-4">
             {randomQuotes.map((e) => (
               <Qoute QouteData={e} key={e.quote} />
             ))}

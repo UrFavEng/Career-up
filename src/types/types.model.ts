@@ -393,3 +393,24 @@ export interface UpdataCourseRes {
   payload: UpdataCoursePayload;
 }
 // end updata corse
+// start getcourses by cats
+interface CouursesByCats {
+  title: string;
+  price: number | null;
+  thumbnailUrl: string;
+  id: number;
+  outline: string[] | null;
+  desc: string;
+  updatedAt: string;
+  level: string;
+  teacherNames: string;
+}
+
+export interface getCoursesByCatsRes {
+  error: boolean;
+  message: string;
+  payload: {
+    courses: CouursesByCats[];
+  };
+}
+//end getcourses by cats
