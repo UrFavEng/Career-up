@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FaHandPointRight } from "react-icons/fa6";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 
 interface CourseInCatProps {
@@ -44,11 +45,43 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
     return `${day} ${monthName} ${year}`;
   }
   return (
-    <div className="flex cursor-pointer  gap-3 basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
-      <div className="w-[40%]">
+    <div className="flex parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
+      <div className=" hidden border-primary border-[1px]  details-course md:block absolute bg-white py-2 px-3 right-[0px] z-50 top-[-100px]">
+        <h1 className=" font-semibold text-[22px] text-text">
+          What'll you learn?
+        </h1>
+        <ul className=" text-[12px] font-semibold leading-3 flex flex-col gap-1 mt-1">
+          <li className="flex gap-2 items-start justify-between">
+            <span className=" text-primary text-[16px]">
+              <FaHandPointRight />
+            </span>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque,
+            distinctio.
+          </li>
+          <li className="flex gap-2">
+            <span className=" text-primary text-[16px]">
+              <FaHandPointRight />
+            </span>
+            Lorem, ipsum dolor sit amet consectetur adipisicing.
+          </li>
+          <li className="flex gap-2">
+            <span className=" text-primary text-[16px]">
+              <FaHandPointRight />
+            </span>
+            Lorem, ipsum dolor sit amet consectetur adipisicing.
+          </li>
+          <li className="flex gap-2">
+            <span className=" text-primary text-[16px]">
+              <FaHandPointRight />
+            </span>
+            Lorem, ipsum dolor sit amet consectetur adipisicing.
+          </li>
+        </ul>
+      </div>
+      <div className="md:w-[40%]">
         <img src={e.thumbnailUrl} alt="" className="  object-contain" />
       </div>
-      <div className=" flex flex-col justify-between w-[55%] pr-4 py-2">
+      <div className=" flex flex-col justify-between md:w-[55%] px-2 gap-4 md:gap-0 md:pr-4 py-2">
         <div>
           <h1 className=" leading-6 text-[22px] font-bold text-text flex items-center justify-between w-full">
             {e.title}{" "}

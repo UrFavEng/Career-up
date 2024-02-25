@@ -6,6 +6,7 @@ import Course from "./Course";
 import { useGetCoursesByCatQuery } from "../store/apislice";
 import { useState } from "react";
 import CourseInCat from "./CourseInCat";
+import { Pagination } from "flowbite-react";
 const CoursesByCat = () => {
   interface Quote {
     quote: string;
@@ -133,7 +134,9 @@ const CoursesByCat = () => {
     useGetCoursesByCatQuery(catid);
   console.log(getCoursesCats, getCoursesCatsLoading);
   const [mostOrNew, setMostOrNew] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const onPageChange = (page: number) => setCurrentPage(page);
   return (
     <div className=" container min-h-[68vh] py-4">
       <h2 className=" font-extrabold text-[28px] leading-3 mt-2  text-primary tracking-[-1px]">
@@ -207,10 +210,21 @@ const CoursesByCat = () => {
           ))}
         </div>
       </div>
-      <div className=" flex gap-3 flex-row flex-wrap items-center justify-center">
+      <div className=" z-0 flex gap-3 flex-row flex-wrap items-center justify-center">
         {getCoursesCats?.payload.courses.map((e) => (
           <CourseInCat e={e} key={e.id} />
         ))}
+      </div>
+      <div className="flex w-[325px] mx-auto items-center justify-center overflow-x-auto sm:justify-center pages-Courses-Cat pt-4">
+        <Pagination
+          layout="pagination"
+          currentPage={currentPage}
+          totalPages={100}
+          onPageChange={onPageChange}
+          previousLabel=" "
+          nextLabel=" "
+          showIcons
+        />
       </div>
       <div className=" flex justify-center items-center">
         <div className=" px-8 md:px-2 py-4 sm:py-8 md:py-0 w-[300px] sm:w-[95%] lg:w-[80%]  bg-white border-2 shadow-md my-4 flex-col sm:flex-row flex justify-center items-center">
