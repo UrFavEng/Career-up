@@ -15,6 +15,9 @@ import EditCourse from "./EditCourse.tsx";
 import CourseLandingPage from "./CourseLandingPage.tsx";
 import Curriculum from "./Curriculum.tsx";
 import CoursesByCat from "./CoursesByCat.tsx";
+import SearchCourse from "./SearchCourse.tsx";
+import CourseById from "./CourseById.tsx";
+import AllFavorites from "./AllFavorites.tsx";
 export {
   Navbar,
   Footer,
@@ -33,4 +36,7 @@ export {
   CourseLandingPage,
   Curriculum,
   CoursesByCat,
+  SearchCourse,
+  CourseById,
+  AllFavorites,
 };

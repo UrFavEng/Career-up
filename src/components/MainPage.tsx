@@ -22,7 +22,6 @@ const MainPage = () => {
   const navigate = useNavigate();
   const { data: getHome, isLoading: getHomeLoading } = useGetHomeQuery();
   const { data: dataUser, error: errGetme } = useGetmeQuery();
-  console.log(getHome);
   const splideOptions = {
     perMove: 1,
     rewind: true,

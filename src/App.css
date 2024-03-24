@@ -161,3 +161,9 @@ html {
   /* padding-top: 100px; */
   padding-bottom: 100px;
 }
+.icn-sec {
+  display: none;
+}
+.div-esc:hover .icn-sec {
+  display: block;
+}

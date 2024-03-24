@@ -14,6 +14,14 @@ import {
   GetCourseRes,
   UpdataCourseRes,
   getCoursesByCatsRes,
+  SearchCoursesRES,
+  AddFavRES,
+  addNewSec,
+  addNewSecRes,
+  DeleteSectionResponse,
+  DeleteSec,
+  UpdateSecResponse,
+  SectionUpdateRES,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -95,6 +103,49 @@ export const apiSlice = createApi({
     getCoursesByCat: builder.query<getCoursesByCatsRes, string | undefined>({
       query: (id) => `courses/getCoursesByCategory/${id}`,
     }),
+    getCoursesSearch: builder.query<SearchCoursesRES, string | undefined>({
+      query: (name) => `courses/searchCourses?q=${name}`,
+    }),
+    addFav: builder.mutation<AddFavRES, { body: { courseId: number } }>({
+      query: ({ body }) => ({
+        url: `favorites/addFavorite`,
+        method: "POST",
+        body,
+      }),
+    }),
+    deleteFav: builder.mutation<string, string>({
+      query: (id) => ({
+        url: `favorites/addFavorite/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    addNewSec: builder.mutation<addNewSecRes, addNewSec>({
+      query: (body) => ({
+        url: `sections/addSection`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
+    deleteSec: builder.mutation<DeleteSectionResponse, DeleteSec>({
+      query: (dataDelete) => ({
+        url: `/sections/deleteSection/${dataDelete.id}`,
+        method: "DELETE",
+        body: { courseId: dataDelete.courseId },
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
+    editNewSec: builder.mutation<
+      UpdateSecResponse,
+      { body: SectionUpdateRES; id: string | number | undefined }
+    >({
+      query: ({ body, id }) => ({
+        url: `/sections/updateSection/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
   }),
 });
 
@@ -114,4 +165,10 @@ export const {
   useGetCourseByidQuery,
   useEditCourseDataMutation,
   useGetCoursesByCatQuery,
+  useGetCoursesSearchQuery,
+  useAddFavMutation,
+  useDeleteFavMutation,
+  useAddNewSecMutation,
+  useDeleteSecMutation,
+  useEditNewSecMutation,
 } = apiSlice;

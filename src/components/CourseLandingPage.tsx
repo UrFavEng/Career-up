@@ -26,6 +26,7 @@ const CourseLandingPage = () => {
   const { id } = useParams<{ id: string | undefined }>();
 
   const { data, isLoading: getCourseLoading } = useGetCourseByidQuery(id);
+  console.log(data?.payload.course.sections[1]);
   const {
     handleSubmit,
     setValue,

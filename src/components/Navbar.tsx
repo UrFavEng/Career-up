@@ -51,7 +51,6 @@ const Navbar = () => {
   };
   const { data: allCats, isLoading: loadingGetAllCats } = useGetAllCatsQuery();
   const { data: dataUser, isLoading: loadingGetme, error } = useGetmeQuery();
-  // console.log(dataUser?.payload.role);
   const [beInstructor] = useBeInstructorMutation();
   const beInstructorFunc = async () => {
     sweetAlertbeInstructor();
@@ -66,7 +65,6 @@ const Navbar = () => {
       });
   };
   const cats = allCats?.payload?.categories;
-  // console.log(cats);
   const [LogOut, { isLoading }] = useLogOutMutation();
   const handleCreateEmptyPost = async () => {
     try {
@@ -81,6 +79,7 @@ const Navbar = () => {
   };
   const navigate = useNavigate();
   const [showSearch, setShowSearch] = useState<boolean>(false);
+
   return (
     <>
       <div className=" navbar px-[20px] bg-white py-[20px]  sticky w-full z-50 ">
@@ -294,6 +293,16 @@ const Navbar = () => {
           </div>
           <div>
             <form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                const inputElement = (
+                  e.target as HTMLFormElement
+                )[0] as HTMLInputElement;
+                console.log(inputElement.value.trim());
+                if (inputElement.value.trim()) {
+                  navigate(`/searchCourse/${inputElement.value.trim()}`);
+                }
+              }}
               action=""
               className={`${
                 !dataUser?.error && !error
@@ -496,7 +505,10 @@ const Navbar = () => {
                 <div className=" text-[25px] xl:text-[32px] cursor-pointer">
                   <AiOutlineShoppingCart />
                 </div>
-                <div className="text-[25px] xl:text-[32px] cursor-pointer">
+                <div
+                  onClick={() => navigate("/allFavorites")}
+                  className="text-[25px] xl:text-[32px] cursor-pointer"
+                >
                   <MdFavoriteBorder />
                 </div>
               </div>
@@ -513,7 +525,20 @@ const Navbar = () => {
         </div>
         {showSearch && (
           <div className="pt-[20px] block md:hidden">
-            <form action="" className="  md:hidden w-full text-center">
+            <form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                e.preventDefault();
+                const inputElement = (
+                  e.target as HTMLFormElement
+                )[0] as HTMLInputElement;
+                console.log(inputElement.value.trim());
+                if (inputElement.value.trim()) {
+                  navigate(`/searchCourse/${inputElement.value.trim()}`);
+                }
+              }}
+              action=""
+              className="  md:hidden w-full text-center"
+            >
               <input
                 type="text"
                 placeholder="Search for anything"

@@ -7,6 +7,7 @@ import { useGetCoursesByCatQuery } from "../store/apislice";
 import { useState } from "react";
 import CourseInCat from "./CourseInCat";
 import { Pagination } from "flowbite-react";
+import { Hourglass } from "react-loader-spinner";
 const CoursesByCat = () => {
   interface Quote {
     quote: string;
@@ -165,35 +166,51 @@ const CoursesByCat = () => {
           </span>
         </div>
         <div className="  block">
-          {mostOrNew ? (
-            <>
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoXL}
-              >
-                {getCoursesCats?.payload.courses.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </>
+          {getCoursesCatsLoading ? (
+            <div className=" py-[80px] text-center w-fit mx-auto">
+              <Hourglass
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="hourglass-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                colors={["#EC5252", "#ec525252"]}
+              />
+            </div>
           ) : (
             <>
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoXL}
-              >
-                {getCoursesCats?.payload.courses.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
+              {mostOrNew ? (
+                <>
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/* @ts-ignore */}
+                  <Splide
+                    aria-label="recomendation-course"
+                    options={splideOptionsRecoXL}
+                  >
+                    {getCoursesCats?.payload.popular.map((e) => (
+                      <SplideSlide key={e.id}>
+                        <Course CourseData={e} />
+                      </SplideSlide>
+                    ))}
+                  </Splide>
+                </>
+              ) : (
+                <>
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/* @ts-ignore */}
+                  <Splide
+                    aria-label="recomendation-course"
+                    options={splideOptionsRecoXL}
+                  >
+                    {getCoursesCats?.payload.new.map((e) => (
+                      <SplideSlide key={e.id}>
+                        <Course CourseData={e} />
+                      </SplideSlide>
+                    ))}
+                  </Splide>
+                </>
+              )}
             </>
           )}
         </div>
@@ -211,9 +228,26 @@ const CoursesByCat = () => {
         </div>
       </div>
       <div className=" z-0 flex gap-3 flex-row flex-wrap items-center justify-center">
-        {getCoursesCats?.payload.courses.map((e) => (
-          <CourseInCat e={e} key={e.id} />
-        ))}
+        {getCoursesCatsLoading ? (
+          <div className=" py-8">
+            {" "}
+            <Hourglass
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="hourglass-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              colors={["#EC5252", "#ec525252"]}
+            />
+          </div>
+        ) : (
+          <>
+            {getCoursesCats?.payload.courses.map((e) => (
+              <CourseInCat e={e} key={e.id} />
+            ))}
+          </>
+        )}
       </div>
       <div className="flex w-[325px] mx-auto items-center justify-center overflow-x-auto sm:justify-center pages-Courses-Cat pt-4">
         <Pagination

@@ -4,17 +4,34 @@ import { MdFavorite } from "react-icons/md";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoArrowUndoSharp } from "react-icons/io5";
 import { useEffect, useRef } from "react";
+import { useAddFavMutation } from "../store/apislice";
+import { AddFavRES } from "../types/types.model";
 interface CourseProps {
   CourseData: {
+    desc: string;
     id: number;
+    level: string;
+    outline: string[] | null;
     thumbnailUrl: string;
     price: null | number;
     title: string;
     teacherNames: string;
+    updatedAt: string;
   };
 }
 
 const Course = ({ CourseData }: CourseProps) => {
+  const [addFav] = useAddFavMutation();
+  const AddFavF = () => {
+    addFav({ body: { courseId: CourseData.id } })
+      .unwrap()
+      .then((fulfilled: AddFavRES) => {
+        console.log(fulfilled);
+      })
+      .catch((rejected) => {
+        console.error(rejected);
+      });
+  };
   const [fav, setFav] = useState<boolean>(false);
   const handleFav = () => {
     setFav(!fav);
@@ -34,6 +51,16 @@ const Course = ({ CourseData }: CourseProps) => {
   useEffect(() => {
     measureDistanceToRight();
   }, []);
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "2-digit",
+    };
+    return date.toLocaleDateString("en-US", options);
+  }
+
   return (
     <div
       onMouseEnter={measureDistanceToRight}
@@ -55,43 +82,29 @@ const Course = ({ CourseData }: CourseProps) => {
             </span>{" "}
             {CourseData.title}
           </h1>
-          <div className=" text-[14px] font-medium">Updated February 2024</div>
+          <div className=" text-[14px] font-medium">
+            {formatDate(CourseData.updatedAt)}
+          </div>
           <p className=" text-[12px] py-1 font-medium text-text leading-[13px]">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas
-            saepe nisi dolor quae iusto illum? Pariatur ipsam doloremque
-            adipisci sint!
+            {CourseData.desc}
           </p>
           <div>
             <ul className=" text-[12px] font-semibold leading-3 flex flex-col gap-1 mt-1">
-              <li className="flex gap-2">
-                <span className=" text-primary text-[16px]">
-                  <FaHandPointRight />
-                </span>{" "}
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto
-                laboriosam eum laudantium a eaque! Voluptates.
-              </li>
-              <li className="flex gap-2">
-                <span className=" text-primary text-[16px]">
-                  <FaHandPointRight />
-                </span>{" "}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Explicabo, dolor.
-              </li>
-
-              <li className="flex gap-2">
-                <span className=" text-primary text-[16px]">
-                  <FaHandPointRight />
-                </span>{" "}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Explicabo, dolor.
-              </li>
-              <li className="flex gap-2">
-                {" "}
-                <span className=" text-primary text-[16px]">
-                  <FaHandPointRight />
-                </span>{" "}
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              </li>
+              {CourseData.outline ? (
+                <>
+                  {" "}
+                  {CourseData.outline?.map((e) => (
+                    <li className="flex gap-2" key={e}>
+                      <span className=" text-primary text-[16px]">
+                        <FaHandPointRight />
+                      </span>{" "}
+                      {e}
+                    </li>
+                  ))}
+                </>
+              ) : (
+                "No Outline"
+              )}
             </ul>
           </div>
         </div>
@@ -100,7 +113,7 @@ const Course = ({ CourseData }: CourseProps) => {
             Add to cart
           </button>
           <span
-            onClick={() => handleFav()}
+            onClick={() => (handleFav(), AddFavF())}
             className=" text-[38px] text-primary"
           >
             {fav ? <MdFavorite /> : <MdFavoriteBorder />}

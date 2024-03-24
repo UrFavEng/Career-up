@@ -234,6 +234,16 @@ export interface teacingCoursesRes {
 }
 // teaching Courses end
 //get course by id
+interface SectionGetCourse {
+  id: number;
+  title: string;
+  order: number;
+  courseId: number;
+  totalLength: null | number;
+  numOfVideos: string;
+  videos: any[]; // Assuming videos are represented as some other type
+}
+
 interface GetCourseResCourse {
   id: number;
   previewVideoUrl: string | null;
@@ -258,7 +268,7 @@ interface GetCourseResCourse {
   numOfVideos: string;
   numOfSections: string;
   teachers: GetCourseResTeacher[];
-  sections: any[];
+  sections: SectionGetCourse[];
   reviews: any[];
   category: GetCourseResCategory;
   favorites: any[];
@@ -404,6 +414,7 @@ interface CouursesByCats {
   updatedAt: string;
   level: string;
   teacherNames: string;
+  views?: number; // This property is optional as it seems to be present only in the "popular" section
 }
 
 export interface getCoursesByCatsRes {
@@ -411,6 +422,100 @@ export interface getCoursesByCatsRes {
   message: string;
   payload: {
     courses: CouursesByCats[];
+    popular: CouursesByCats[];
+    new: CouursesByCats[];
   };
 }
 //end getcourses by cats
+//Search courses
+interface CoursesSearch {
+  id: number;
+  thumbnailUrl: string;
+  title: string;
+  subtitle: string;
+  price: number;
+  level: string;
+  lang: string;
+  totalLength: number | null;
+  teachers: TeacherSearchCourses[];
+}
+
+export interface TeacherSearchCourses {
+  fullname: string;
+  courseTeacher: {
+    courseId: number;
+    teacherId: number;
+  };
+}
+
+export interface SearchCoursesRES {
+  error: boolean;
+  message: string;
+  payload: {
+    courses: CoursesSearch[];
+  };
+}
+
+//end Search courses
+//add fave
+export interface AddFavRES {
+  error: boolean;
+  message: string;
+  payload: AddFavPayload;
+}
+
+interface AddFavPayload {}
+//end add fave
+//start add new sec
+export interface addNewSec {
+  courseId: number | undefined;
+  sectionTitle: string;
+}
+interface addNewSecPayload {
+  id: number;
+  title: string;
+  courseId: number;
+  order: number;
+}
+
+export interface addNewSecRes {
+  error: boolean;
+  message: string;
+  payload: {
+    section: addNewSecPayload;
+  };
+}
+//end add new sec
+// delete sec
+export interface DeleteSectionResponse {
+  error: boolean;
+  message: string;
+  payload: Record<string, any>; // يمكن تعيين أي نوع للبيانات الإضافية هنا
+}
+export interface DeleteSec {
+  courseId: number;
+  id: number;
+}
+// end delete sec
+// start Edit Sec
+interface RowUpdatedSec {
+  id: number;
+  title: string;
+  order: number;
+  courseId: number;
+}
+
+interface UpdateSecPayload {
+  rowUpdated: RowUpdatedSec;
+}
+
+export interface UpdateSecResponse {
+  error: boolean;
+  message: string;
+  payload: UpdateSecPayload;
+}
+export interface SectionUpdateRES {
+  sectionTitle: string;
+  courseId: number;
+}
+// end Edit Sec

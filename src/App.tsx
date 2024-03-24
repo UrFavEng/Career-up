@@ -2,6 +2,8 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   AccountSecurity,
+  AllFavorites,
+  CourseById,
   CourseLandingPage,
   CoursesByCat,
   CoursesInstructor,
@@ -14,6 +16,7 @@ import {
   Login,
   MainPage,
   Navbar,
+  SearchCourse,
   Signup,
 } from "./components";
 
@@ -35,6 +38,9 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/allFavorites" element={<AllFavorites />} />
+        <Route path="/searchCourse/:nameCourse" element={<SearchCourse />} />
+        <Route path="/Course/:id" element={<CourseById />} />
         <Route path="/instructor" element={<Instructor />}>
           <Route index element={<CoursesInstructor />} />
           <Route path="edit-course/:id" element={<EditCourse />}>
