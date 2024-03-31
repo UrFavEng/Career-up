@@ -11,6 +11,7 @@ import { Hourglass } from "react-loader-spinner";
 const GetMe = () => {
   const navigate = useNavigate();
   const { data, isLoading: loadingGetme, error } = useGetmeQuery();
+  console.log(data);
   const [submitFormData, { isLoading: loadingSendData }] =
     useEditUserDataMutation();
   const [err, setErr] = useState("");

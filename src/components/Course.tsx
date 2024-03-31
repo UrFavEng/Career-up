@@ -4,8 +4,9 @@ import { MdFavorite } from "react-icons/md";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoArrowUndoSharp } from "react-icons/io5";
 import { useEffect, useRef } from "react";
-import { useAddFavMutation } from "../store/apislice";
+import { useAddFavMutation, useDeleteFavMutation } from "../store/apislice";
 import { AddFavRES } from "../types/types.model";
+import { useNavigate } from "react-router-dom";
 interface CourseProps {
   CourseData: {
     desc: string;
@@ -21,24 +22,35 @@ interface CourseProps {
 }
 
 const Course = ({ CourseData }: CourseProps) => {
+  const [fav, setFav] = useState<boolean>(false);
+
   const [addFav] = useAddFavMutation();
+  const [deleteFav] = useDeleteFavMutation();
   const AddFavF = () => {
     addFav({ body: { courseId: CourseData.id } })
       .unwrap()
       .then((fulfilled: AddFavRES) => {
         console.log(fulfilled);
+        setFav(true);
       })
       .catch((rejected) => {
         console.error(rejected);
       });
   };
-  const [fav, setFav] = useState<boolean>(false);
-  const handleFav = () => {
-    setFav(!fav);
+  const deleteFavF = () => {
+    deleteFav(CourseData.id)
+      .unwrap()
+      .then((fulfilled) => {
+        console.log(fulfilled);
+        setFav(false);
+      })
+      .catch((rejected) => {
+        console.error(rejected);
+      });
   };
+
   const [distanceToRight, setDistanceToRight] = useState<number | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-
   const measureDistanceToRight = () => {
     const imageElement = imageRef.current;
     if (imageElement) {
@@ -47,7 +59,6 @@ const Course = ({ CourseData }: CourseProps) => {
       setDistanceToRight(distance);
     }
   };
-
   useEffect(() => {
     measureDistanceToRight();
   }, []);
@@ -60,12 +71,13 @@ const Course = ({ CourseData }: CourseProps) => {
     };
     return date.toLocaleDateString("en-US", options);
   }
+  const navigate = useNavigate();
 
   return (
     <div
       onMouseEnter={measureDistanceToRight}
       ref={imageRef}
-      className="parent-details-course bg-transparent "
+      className="parent-details-course bg-transparent  cursor-pointer"
     >
       <div
         className={`hidden ${
@@ -113,14 +125,23 @@ const Course = ({ CourseData }: CourseProps) => {
             Add to cart
           </button>
           <span
-            onClick={() => (handleFav(), AddFavF())}
-            className=" text-[38px] text-primary"
+            onClick={() => AddFavF()}
+            className={`  text-[38px] text-primary ${fav ? "hidden" : "block"}`}
           >
-            {fav ? <MdFavorite /> : <MdFavoriteBorder />}
+            {/* {fav ? */}
+
+            <MdFavoriteBorder />
+            {/* //  : <MdFavoriteBorder />} */}
+          </span>
+          <span
+            onClick={() => deleteFavF()}
+            className={`text-[38px] text-primary ${fav ? "block" : " hidden"}`}
+          >
+            <MdFavorite />
           </span>
         </div>
       </div>
-      <div className="">
+      <div className="" onClick={() => navigate(`/Course/${CourseData.id}`)}>
         <img src={CourseData.thumbnailUrl} alt="" />
       </div>
       <div>

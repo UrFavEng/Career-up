@@ -22,6 +22,12 @@ import {
   DeleteSec,
   UpdateSecResponse,
   SectionUpdateRES,
+  DeleteFavResponse,
+  getCourseByIdResponse,
+  UploadVideoResponse,
+  DeleteVideo,
+  UpdateVidResponse,
+  UpdateVidInfo,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -113,9 +119,9 @@ export const apiSlice = createApi({
         body,
       }),
     }),
-    deleteFav: builder.mutation<string, string>({
+    deleteFav: builder.mutation<DeleteFavResponse, number>({
       query: (id) => ({
-        url: `favorites/addFavorite/${id}`,
+        url: `/favorites/deleteFavorite/${id}`,
         method: "DELETE",
       }),
     }),
@@ -146,6 +152,45 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["TeachingCourse"],
     }),
+    getAllFav: builder.query({
+      query: () => `/favorites/allFavorites`,
+    }),
+    getCourseById: builder.query<getCourseByIdResponse, string | undefined>({
+      query: (id) => `courses/getCourseById/${id}`,
+    }),
+    UploadVideo: builder.mutation<
+      UploadVideoResponse,
+      { body: FormData; id: string | number | undefined }
+    >({
+      query: ({ body, id }) => ({
+        url: `videos/uploadVideo/${id}`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
+    deleteVideo: builder.mutation<
+      DeleteSectionResponse,
+      { body: DeleteVideo; id: string | number | undefined }
+    >({
+      query: ({ body, id }) => ({
+        url: `/videos/deleteVideo/${id}`,
+        method: "DELETE",
+        body,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
+    UpdataVid: builder.mutation<
+      UpdateVidResponse,
+      { body: UpdateVidInfo; id: string | number | undefined }
+    >({
+      query: ({ body, id }) => ({
+        url: `/videos/updateVideo/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
   }),
 });
 
@@ -171,4 +216,9 @@ export const {
   useAddNewSecMutation,
   useDeleteSecMutation,
   useEditNewSecMutation,
+  useGetAllFavQuery,
+  useGetCourseByIdQuery,
+  useUploadVideoMutation,
+  useDeleteVideoMutation,
+  useUpdataVidMutation,
 } = apiSlice;

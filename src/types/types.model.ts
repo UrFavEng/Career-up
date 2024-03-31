@@ -234,6 +234,15 @@ export interface teacingCoursesRes {
 }
 // teaching Courses end
 //get course by id
+interface SectionGetCourseVideo {
+  title: string;
+  id: number;
+  length: number;
+  order: number;
+  public: boolean;
+  sectionId: number;
+  // Add other properties as needed
+}
 interface SectionGetCourse {
   id: number;
   title: string;
@@ -241,7 +250,7 @@ interface SectionGetCourse {
   courseId: number;
   totalLength: null | number;
   numOfVideos: string;
-  videos: any[]; // Assuming videos are represented as some other type
+  videos: SectionGetCourseVideo[]; // Assuming videos are represented as some other type
 }
 
 interface GetCourseResCourse {
@@ -519,3 +528,137 @@ export interface SectionUpdateRES {
   courseId: number;
 }
 // end Edit Sec
+//delete Fav
+export interface DeleteFavResponse {
+  error: boolean;
+  message: string;
+  payload: any;
+}
+//end delete Fav
+// get course by id
+interface getCourseByidTeacher {
+  id: number;
+  fullname: string;
+  email: string;
+  // Add other properties as needed
+}
+
+interface getCourseByidSection {
+  id: number;
+  title: string;
+  order: number;
+  // Add other properties as needed
+}
+
+interface getCourseByidCategory {
+  id: number;
+  categoryName: string;
+  // Add other properties as needed
+}
+
+interface getCoursebyidFavorite {
+  courseId: number;
+  userId: number;
+  // Add other properties as needed
+}
+
+interface getCoursebyId {
+  id: number;
+  previewVideoUrl: string | null;
+  thumbnailUrl: string;
+  title: string;
+  subtitle: string;
+  desc: string;
+  beneficiaries: string | null;
+  outline: string[];
+  prerequisites: string[];
+  price: number;
+  allowPoints: boolean;
+  status: string;
+  lang: string;
+  level: string;
+  views: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  categoryId: number;
+  totalReviewsRate: number | null;
+  totalLength: number | null;
+  numOfVideos: string;
+  numOfSections: string;
+  teachers: getCourseByidTeacher[];
+  sections: getCourseByidSection[];
+  reviews: any[]; // Define a proper type if available
+  category: getCourseByidCategory;
+  favorites: getCoursebyidFavorite[];
+  carts: any[]; // Define a proper type if available
+  numOfEnrolledStudents: number;
+  numOfCourseReviews: number;
+  publicVideos: { sections: any[] }; // Define a proper type if available
+  isEnrolled: boolean;
+}
+
+export interface getCourseByIdResponse {
+  error: boolean;
+  message: string;
+  payload: {
+    course: getCoursebyId;
+  };
+}
+
+//end get course by id
+// start upload video
+interface UploadVideo {
+  id: number;
+  length: number;
+  sectionId: number;
+  title: string;
+  public: boolean;
+  order: number;
+  updatedAt: string;
+  createdAt: string;
+  videoUrl: string | null;
+}
+
+export interface UploadVideoResponse {
+  error: boolean;
+  message: string;
+  payload: {
+    video: UploadVideo;
+  };
+}
+// end upload video
+//start delete video
+export interface DeleteVideo {
+  courseId: number;
+  sectionId: number;
+}
+//end delete video
+//start Updata vid
+interface RowUpdatedvid {
+  id: number;
+  title: string;
+  videoUrl: string | null;
+  length: number;
+  order: number;
+  public: boolean;
+  createdAt: string;
+  updatedAt: string;
+  sectionId: number;
+}
+
+interface PayloadRowUpdatedvid {
+  rowUpdated: RowUpdatedvid;
+}
+
+export interface UpdateVidResponse {
+  error: boolean;
+  message: string;
+  payload: PayloadRowUpdatedvid;
+}
+export interface UpdateVidInfo {
+  title: string;
+  public: boolean;
+  courseId: number;
+}
+//end Updata vid

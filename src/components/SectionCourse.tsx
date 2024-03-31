@@ -1,10 +1,25 @@
 import { GoFile } from "react-icons/go";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
-import { useDeleteSecMutation, useEditNewSecMutation } from "../store/apislice";
+import {
+  useDeleteSecMutation,
+  useDeleteVideoMutation,
+  useEditNewSecMutation,
+} from "../store/apislice";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import UploadVideo from "./UploadVideo";
+import UpdateVideo from "./UpdateVideo";
+interface SectionGetCourseVideo {
+  title: string;
+  id: number;
+  length: number;
+  order: number;
+  public: boolean;
+  sectionId: number;
+  // Add other properties as needed
+}
 interface SectionCourseProps {
   SectionData: {
     id: number;
@@ -13,7 +28,7 @@ interface SectionCourseProps {
     courseId: number;
     totalLength: null | number;
     numOfVideos: string;
-    videos: any[];
+    videos: SectionGetCourseVideo[];
   };
 }
 interface FormValues {
@@ -25,12 +40,25 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
   const { id } = useParams<{ id: string | undefined }>();
   const NumID = Number(id);
   const [deleteSec] = useDeleteSecMutation();
+  const [deleteVid] = useDeleteVideoMutation();
   const handleDeleteSec = () => {
     const dataDelete = {
       courseId: NumID,
       id: SectionData.id,
     };
     deleteSec(dataDelete)
+      .unwrap()
+      .then((fulfilled) => {
+        console.log(fulfilled);
+      })
+      .catch((rejected) => {
+        console.error(rejected);
+      });
+  };
+  const handleDeleteVid = (id: number) => {
+    const body = { courseId: SectionData.courseId, sectionId: SectionData.id };
+    console.log(body);
+    deleteVid({ body, id })
       .unwrap()
       .then((fulfilled) => {
         console.log(fulfilled);
@@ -57,6 +85,7 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
         console.log(rejected);
       });
   };
+  const [showAdd, setShowAdd] = useState<boolean>(false);
   return (
     <div className=" cursor-move  border-2 py-5 px-2 bg-background div-esc">
       <div className=" flex items-center gap-2">
@@ -94,61 +123,49 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
           <MdDelete />
         </span>
       </div>
+      <div className=" mb-2">
+        <h3 className=" text-[22px] pt-1 font-semibold text-accent-1">
+          Videos:
+        </h3>
+        {SectionData.videos.map((v) => (
+          <>
+            <div className="bg-secondary border-2" key={v.id}>
+              {" "}
+              <div className="cursor-move div-vid  py-2 flex items-center ">
+                <span className=" font-medium text-text text-[17px] px-2">
+                  {v.title}
+                </span>
+                <div className=" flex items-center gap-1">
+                  <span
+                    className=" cursor-pointer icn-vid"
+                    onClick={() => setShowAdd(!showAdd)}
+                  >
+                    <MdEdit />
+                  </span>
+                  <span
+                    className=" cursor-pointer icn-vid"
+                    onClick={() => handleDeleteVid(v.id)}
+                  >
+                    <MdDelete />
+                  </span>
+                </div>
+              </div>
+              <UpdateVideo
+                visible={showAdd}
+                DataVideo={v}
+                CourseId={SectionData.courseId}
+              />
+            </div>
+          </>
+        ))}
+      </div>
       <h1
         onClick={() => setShowAddVideo(!showAddVideo)}
         className=" cursor-pointer w-fit font-medium text-accent-1 hover:text-black py-[6px] px-2 bg-secondary"
       >
         Upload Lecture
       </h1>
-      {showAddVideo ? (
-        <form action="" className=" mt-2" onSubmit={(e) => e.preventDefault()}>
-          <div className=" flex flex-col">
-            <label
-              htmlFor="title"
-              className="cursor-pointer text-[15px] font-semibold text-[#383838]"
-            >
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              placeholder="Title"
-              className="   capitalize text-[17px] font-medium  pl-3 shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-            />
-          </div>
-          <div className=" mt-3 mb-4">
-            {" "}
-            <input
-              type="file"
-              id="file-inputt"
-              className=" outline-none border-none w-0 hidden"
-            />
-            <label
-              id="file-input-label"
-              htmlFor="file-inputt"
-              className="cursor-pointer w-fit font-medium text-accent-1 hover:text-black py-2 px-2 bg-secondary"
-            >
-              Upload Video
-            </label>
-          </div>
-          <div className=" flex gap-2 items-center">
-            <select
-              title="status "
-              className=" h-[32px] cursor-pointer pl-2 sm:w-[30%] font-medium text-[18px] shadow-sm border-[#777] border-[1px] py-1 outline-none rounded-md"
-            >
-              <option value="true">Public</option>
-              <option value="false">Private</option>
-            </select>
-            <input
-              type="submit"
-              value="Submit"
-              className=" w-fit h-[32px]  px-4 py-1  bg-primary font-medium text-text cursor-pointer"
-            />
-          </div>
-        </form>
-      ) : (
-        ""
-      )}
+      {showAddVideo ? <UploadVideo SectionData={SectionData} /> : ""}
     </div>
   );
 };

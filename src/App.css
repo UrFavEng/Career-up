@@ -167,3 +167,9 @@ html {
 .div-esc:hover .icn-sec {
   display: block;
 }
+.icn-vid {
+  display: none;
+}
+.div-vid:hover .icn-vid {
+  display: block;
+}

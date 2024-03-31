@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaHandPointRight } from "react-icons/fa6";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { useAddFavMutation, useDeleteFavMutation } from "../store/apislice";
 
 interface CourseInCatProps {
   e: {
@@ -18,9 +19,33 @@ interface CourseInCatProps {
 
 const CourseInCat = ({ e }: CourseInCatProps) => {
   const [fav, setFav] = useState<boolean>(false);
-  const handleFav = () => {
-    setFav(!fav);
+
+  const [addFav] = useAddFavMutation();
+  const [deleteFav] = useDeleteFavMutation();
+
+  const AddFavF = () => {
+    addFav({ body: { courseId: e.id } })
+      .unwrap()
+      .then((fulfilled) => {
+        console.log(fulfilled);
+        setFav(true);
+      })
+      .catch((rejected) => {
+        console.error(rejected);
+      });
   };
+  const deleteFavF = () => {
+    deleteFav(e.id)
+      .unwrap()
+      .then((fulfilled) => {
+        console.log(fulfilled);
+        setFav(false);
+      })
+      .catch((rejected) => {
+        console.error(rejected);
+      });
+  };
+
   function formatDate(dateString: string) {
     const months = [
       "January",
@@ -90,10 +115,16 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
             Add to cart
           </button>
           <span
-            onClick={() => handleFav()}
-            className=" text-[38px] text-primary"
+            onClick={() => AddFavF()}
+            className={` text-[38px] text-primary ${fav ? "hidden" : "block"}`}
           >
-            {fav ? <MdFavorite /> : <MdFavoriteBorder />}
+            <MdFavoriteBorder />
+          </span>
+          <span
+            onClick={() => deleteFavF()}
+            className={` text-[38px] text-primary ${fav ? "block" : " hidden"}`}
+          >
+            <MdFavorite />
           </span>
         </div>
       </div>
