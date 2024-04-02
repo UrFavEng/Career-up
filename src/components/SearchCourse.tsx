@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useGetCoursesSearchQuery } from "../store/apislice";
-import CourseInCat from "./CourseInCat";
 import { Hourglass } from "react-loader-spinner";
+import CourseInSearch from "./CourseInSearch";
 
 const SearchCourse = () => {
   const { nameCourse } = useParams<string>();
 
   const { data, isLoading } = useGetCoursesSearchQuery(nameCourse);
-  console.log(data);
+  console.log(data?.payload.courses);
   return (
     <>
       <div className=" container py-4 min-h-[75vh]">
@@ -30,7 +30,7 @@ const SearchCourse = () => {
             <>
               {" "}
               {data?.payload.courses.map((e) => (
-                <CourseInCat e={e} />
+                <CourseInSearch e={e} />
               ))}
             </>
           )}

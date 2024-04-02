@@ -9,6 +9,8 @@ import { AddFavRES } from "../types/types.model";
 import { useNavigate } from "react-router-dom";
 interface CourseProps {
   CourseData: {
+    isFaved?: boolean | undefined;
+    isInCart?: boolean | undefined;
     desc: string;
     id: number;
     level: string;

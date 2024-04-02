@@ -102,11 +102,17 @@ interface CategoryHome {
 }
 
 interface CourseHome {
+  desc: string;
   id: number;
   thumbnailUrl: string;
   price: null | number; // You may need to update the type for price if it can be a number
   title: string;
   teacherNames: string;
+  isFaved: boolean;
+  isInCart: boolean;
+  level: string;
+  outline: string[];
+  updatedAt: string;
 }
 
 interface PayloadHome {
@@ -437,7 +443,7 @@ export interface getCoursesByCatsRes {
 }
 //end getcourses by cats
 //Search courses
-interface CoursesSearch {
+export interface CoursesSearch {
   id: number;
   thumbnailUrl: string;
   title: string;

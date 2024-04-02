@@ -133,7 +133,7 @@ const CoursesByCat = () => {
   const randomQuotes = getRandomQuotes();
   const { data: getCoursesCats, isLoading: getCoursesCatsLoading } =
     useGetCoursesByCatQuery(catid);
-  console.log(getCoursesCats, getCoursesCatsLoading);
+  console.log(getCoursesCats);
   const [mostOrNew, setMostOrNew] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
 

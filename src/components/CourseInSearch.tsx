@@ -1,28 +1,13 @@
 import { useState } from "react";
-import { FaHandPointRight } from "react-icons/fa6";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import { useAddFavMutation, useDeleteFavMutation } from "../store/apislice";
-import { TeacherSearchCourses } from "../types/types.model";
+import { CoursesSearch } from "../types/types.model";
 
 interface CourseInCatProps {
-  e: {
-    title: string;
-    price: number | null;
-    subtitle?: string | null;
-    thumbnailUrl: string;
-    id: number;
-    outline: string[] | null;
-    desc: string;
-    updatedAt: string;
-    level: string;
-    lang?: string;
-    teacherNames?: string;
-    teachers?: TeacherSearchCourses;
-    totalLength?: null | number;
-  };
+  e: CoursesSearch;
 }
 
-const CourseInCat = ({ e }: CourseInCatProps) => {
+const CourseInSearch = ({ e }: CourseInCatProps) => {
   const [fav, setFav] = useState<boolean>(false);
 
   const [addFav] = useAddFavMutation();
@@ -51,51 +36,12 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
       });
   };
 
-  function formatDate(dateString: string) {
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const monthName = months[date.getMonth()];
-    const year = date.getFullYear();
-
-    return `${day} ${monthName} ${year}`;
-  }
   return (
     <div className="flex parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
       <div className=" hidden border-primary border-[1px] w-[100%] min-h-[80%]  details-course md:block absolute bg-white py-2 px-3 right-[0px] z-50 top-[-100px]">
         <h1 className=" font-semibold text-[22px] text-text">
           What'll you learn?
         </h1>
-        <ul className=" text-[12px] font-semibold leading-3 flex flex-col gap-1 mt-1">
-          {e.outline ? (
-            <>
-              {e.outline?.map((e) => (
-                <li className="flex gap-2 items-start justify-between">
-                  <span className=" text-primary text-[16px]">
-                    <FaHandPointRight />
-                  </span>
-                  {e}
-                </li>
-              ))}
-            </>
-          ) : (
-            "Not added yet"
-          )}
-        </ul>
       </div>
       <div className="md:w-[40%]">
         <img src={e.thumbnailUrl} alt="" className="  object-contain" />
@@ -109,11 +55,9 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
             </span>
           </h1>
           <h5 className=" font-medium text-[14px] text-accent-1">
-            {e.teacherNames}
+            {e.teachers.map((t) => `${t.fullname} ${" "}`)}
           </h5>
-          <p className=" text-[12px] font-bold">
-            {e.level} - {e.updatedAt && formatDate(e.updatedAt)}
-          </p>
+          <p className=" text-[12px] font-bold">{e.level}</p>
         </div>
         <div className=" flex gap-2">
           <button className=" py-1 font-medium text-[16px] w-[90px] text-secondary hover:text-white transition bg-primary">
@@ -137,4 +81,4 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
   );
 };
 
-export default CourseInCat;
+export default CourseInSearch;
