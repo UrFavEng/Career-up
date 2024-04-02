@@ -1,5 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUploadVideoMutation } from "../store/apislice";
+import { Hourglass } from "react-loader-spinner";
+import Swal from "sweetalert2";
 interface SectionCourseProps {
   SectionData: {
     id: number;
@@ -17,10 +19,19 @@ interface VideoData {
   courseVideo: FileList;
 }
 const UploadVideo = ({ SectionData }: SectionCourseProps) => {
-  const [UploadLecture, { isLoading }] = useUploadVideoMutation();
+  const handleSuccess = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Done",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+  const [UploadLecture, { isLoading: loadingUploadVid }] =
+    useUploadVideoMutation();
   const { handleSubmit, register } = useForm<VideoData>();
   const onSubmit: SubmitHandler<VideoData> = (data) => {
-    console.log(isLoading);
     const formData = new FormData();
     if (data.courseVideo && data.courseVideo.length > 0) {
       formData.append("courseVideo", data.courseVideo[0]);
@@ -32,6 +43,7 @@ const UploadVideo = ({ SectionData }: SectionCourseProps) => {
       .unwrap()
       .then((fulfilled) => {
         console.log(fulfilled);
+        handleSuccess();
       })
       .catch((rejected) => {
         console.log(rejected);
@@ -79,13 +91,26 @@ const UploadVideo = ({ SectionData }: SectionCourseProps) => {
           <option value="true">Public</option>
           <option value="false">Private</option>
         </select>
-        <input
-          type="submit"
-          value="Submit"
-          className={`w-fit h-[32px] ${
-            isLoading ? "hidden" : ""
-          }  px-4 py-1  bg-primary font-medium text-text cursor-pointer`}
-        />
+        {loadingUploadVid ? (
+          <div className="">
+            {" "}
+            <Hourglass
+              visible={true}
+              height="25"
+              width="25"
+              ariaLabel="hourglass-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              colors={["#EC5252", "#ec525252"]}
+            />
+          </div>
+        ) : (
+          <input
+            type="submit"
+            value="Submit"
+            className={`w-fit h-[32px]  px-4 py-1  bg-primary font-medium text-text cursor-pointer`}
+          />
+        )}
       </div>
     </form>
   );

@@ -18,7 +18,9 @@ import CoursesByCat from "./CoursesByCat.tsx";
 import SearchCourse from "./SearchCourse.tsx";
 import CourseById from "./CourseById.tsx";
 import AllFavorites from "./AllFavorites.tsx";
+import AllCarts from "./AllCarts.tsx";
 export {
+  AllCarts,
   Navbar,
   Footer,
   Signup,

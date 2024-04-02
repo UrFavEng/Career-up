@@ -662,3 +662,40 @@ export interface UpdateVidInfo {
   courseId: number;
 }
 //end Updata vid
+// start get favs
+interface CourseGetFavs {
+  allowPoints: boolean;
+  beneficiaries: null | any; // You may replace 'any' with a more specific type if known
+  categoryId: number;
+  createdAt: string;
+  deletedAt: string | null;
+  desc: string;
+  id: number;
+  lang: string;
+  level: string;
+  outline: string[];
+  prerequisites: string[];
+  previewVideoUrl: string | null;
+  price: number;
+  status: string;
+  subtitle: string;
+  thumbnailUrl: string;
+  title: string;
+  updatedAt: string;
+  views: number;
+}
+
+interface CourseArrayElementGetAllFavs {
+  course: CourseGetFavs;
+  courseId: number;
+  userId: number;
+}
+export interface GetAllFavsRES {
+  error: boolean;
+  message: string;
+  payload: {
+    courses: CourseArrayElementGetAllFavs[];
+    numOfPages: number;
+  };
+}
+// end get favs

@@ -2,14 +2,25 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useAddNewSecMutation, useGetCourseByidQuery } from "../store/apislice";
 import { useParams } from "react-router-dom";
 import SectionCourse from "./SectionCourse";
+import { Hourglass } from "react-loader-spinner";
+import Swal from "sweetalert2";
 interface dataTS {
   sectionTitle: string;
 }
 const Curriculum = () => {
+  const handleSuccess = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Done",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
   const { id } = useParams<{ id: string | undefined }>();
-  const { data } = useGetCourseByidQuery(id);
+  const { data, isLoading } = useGetCourseByidQuery(id);
   const IDNum = Number(id);
-  const [AddNewSec] = useAddNewSecMutation();
+  const [AddNewSec, { isLoading: loadingAddNewSec }] = useAddNewSecMutation();
   const { handleSubmit, register } = useForm<dataTS>();
   const onSubmit: SubmitHandler<dataTS> = (data) => {
     console.log(data);
@@ -20,6 +31,7 @@ const Curriculum = () => {
     AddNewSec(body)
       .unwrap()
       .then((fulfilled) => {
+        handleSuccess();
         console.log(fulfilled);
       })
       .catch((rejected) => {
@@ -44,9 +56,27 @@ const Curriculum = () => {
       </div>
       <div className=" py-4">
         <div className=" flex gap-4 flex-col">
-          {data?.payload.course.sections.map((sec) => (
-            <SectionCourse SectionData={sec} key={sec.id} />
-          ))}
+          {isLoading ? (
+            <div className=" py-8 flex justify-center items-center">
+              {" "}
+              <Hourglass
+                visible={true}
+                height="100"
+                width="100"
+                ariaLabel="hourglass-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                colors={["#EC5252", "#ec525252"]}
+              />
+            </div>
+          ) : (
+            <>
+              {" "}
+              {data?.payload.course.sections.map((sec) => (
+                <SectionCourse SectionData={sec} key={sec.id} />
+              ))}
+            </>
+          )}
         </div>
         <div className=" py-4">
           <form
@@ -65,11 +95,26 @@ const Curriculum = () => {
                 className=" h-[35px] w-[90%]"
               />
             </div>
-            <input
-              type="submit"
-              value="Add Section"
-              className=" mt-3  cursor-pointer bg-primary w-fit text-right py-2 px-1 text-text font-semibold text-[17px]"
-            />
+            {loadingAddNewSec ? (
+              <div className="pt-2">
+                {" "}
+                <Hourglass
+                  visible={true}
+                  height="35"
+                  width="35"
+                  ariaLabel="hourglass-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  colors={["#EC5252", "#ec525252"]}
+                />
+              </div>
+            ) : (
+              <input
+                type="submit"
+                value="Add Section"
+                className=" mt-3  cursor-pointer bg-primary w-fit text-right py-2 px-1 text-text font-semibold text-[17px]"
+              />
+            )}
           </form>
         </div>
       </div>

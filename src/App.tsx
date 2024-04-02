@@ -2,6 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   AccountSecurity,
+  AllCarts,
   AllFavorites,
   CourseById,
   CourseLandingPage,
@@ -39,6 +40,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/allFavorites" element={<AllFavorites />} />
+        <Route path="/allCarts" element={<AllCarts />} />
         <Route path="/searchCourse/:nameCourse" element={<SearchCourse />} />
         <Route path="/Course/:id" element={<CourseById />} />
         <Route path="/instructor" element={<Instructor />}>

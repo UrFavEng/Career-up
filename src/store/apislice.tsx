@@ -28,6 +28,7 @@ import {
   DeleteVideo,
   UpdateVidResponse,
   UpdateVidInfo,
+  GetAllFavsRES,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -35,7 +36,7 @@ export const apiSlice = createApi({
     baseUrl: "https://e-learning-5rhj.onrender.com/api/v1/",
     credentials: "include",
   }),
-  tagTypes: ["user", "TeachingCourse"],
+  tagTypes: ["user", "TeachingCourse", "fav"],
 
   endpoints: (builder) => ({
     signUp: builder.mutation<CreateUserResponse, UserSignUP>({
@@ -118,12 +119,14 @@ export const apiSlice = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["fav"],
     }),
     deleteFav: builder.mutation<DeleteFavResponse, number>({
       query: (id) => ({
         url: `/favorites/deleteFavorite/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["fav"],
     }),
     addNewSec: builder.mutation<addNewSecRes, addNewSec>({
       query: (body) => ({
@@ -152,8 +155,9 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["TeachingCourse"],
     }),
-    getAllFav: builder.query({
+    getAllFav: builder.query<GetAllFavsRES, void>({
       query: () => `/favorites/allFavorites`,
+      providesTags: ["fav"],
     }),
     getCourseById: builder.query<getCourseByIdResponse, string | undefined>({
       query: (id) => `courses/getCourseById/${id}`,

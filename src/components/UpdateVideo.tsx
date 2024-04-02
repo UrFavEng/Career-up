@@ -1,6 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUpdataVidMutation } from "../store/apislice";
 import { useEffect } from "react";
+import { Hourglass } from "react-loader-spinner";
+import Swal from "sweetalert2";
 
 interface SectionGetCourseVideo {
   title: string;
@@ -20,8 +22,17 @@ interface FormValues {
   public: boolean;
 }
 const UpdateVideo = ({ visible, DataVideo, CourseId }: UpdateVideoProps) => {
+  const handleSuccess = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Done",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
   const { handleSubmit, setValue, register } = useForm<FormValues>();
-  const [updataVid] = useUpdataVidMutation();
+  const [updataVid, { isLoading: loadingUpdataVid }] = useUpdataVidMutation();
   useEffect(() => {
     setValue("title", DataVideo.title);
     setValue("public", DataVideo.public);
@@ -31,6 +42,7 @@ const UpdateVideo = ({ visible, DataVideo, CourseId }: UpdateVideoProps) => {
     updataVid({ body, id: DataVideo.id })
       .unwrap()
       .then((fulfilled) => {
+        handleSuccess();
         console.log(fulfilled);
       })
       .catch((rejected) => {
@@ -66,11 +78,26 @@ const UpdateVideo = ({ visible, DataVideo, CourseId }: UpdateVideoProps) => {
               <option value="true">Public</option>
               <option value="false">Private</option>
             </select>
-            <input
-              type="submit"
-              value="Submit"
-              className={`w-fit h-[30px]  px-2   bg-primary font-medium text-[15px] flex items-center justify-center text-text cursor-pointer`}
-            />
+            {loadingUpdataVid ? (
+              <div className="">
+                {" "}
+                <Hourglass
+                  visible={true}
+                  height="20"
+                  width="20"
+                  ariaLabel="hourglass-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  colors={["#EC5252", "#ec525252"]}
+                />
+              </div>
+            ) : (
+              <input
+                type="submit"
+                value="Submit"
+                className={`w-fit h-[30px]  px-2   bg-primary font-medium text-[15px] flex items-center justify-center text-text cursor-pointer`}
+              />
+            )}
           </div>
         </form>
       </div>
