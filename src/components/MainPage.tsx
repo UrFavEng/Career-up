@@ -22,7 +22,6 @@ import { useNavigate } from "react-router-dom";
 const MainPage = () => {
   const navigate = useNavigate();
   const { data: getHome, isLoading: getHomeLoading } = useGetHomeQuery();
-  console.log(getHome?.payload.recommendations);
   const { data: dataUser, error: errGetme } = useGetmeQuery();
   const splideOptions = {
     perMove: 1,

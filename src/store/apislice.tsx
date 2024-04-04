@@ -94,6 +94,7 @@ export const apiSlice = createApi({
     }),
     getHome: builder.query<getHome, void>({
       query: () => `/courses/home`,
+      providesTags: ["fav", "user"],
     }),
     getCourseByid: builder.query<GetCourseRes, string | undefined>({
       query: (id) => `courses/getCourseById/${id}`,

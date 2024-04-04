@@ -1,8 +1,13 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { FaHandPointRight } from "react-icons/fa6";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
-import { useAddFavMutation, useDeleteFavMutation } from "../store/apislice";
+// import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import {
+  useAddCartMutation,
+  // useAddFavMutation,
+  // useDeleteFavMutation,
+} from "../store/apislice";
 import { TeacherSearchCourses } from "../types/types.model";
+import Swal from "sweetalert2";
 
 interface CourseInCatProps {
   e: {
@@ -23,33 +28,78 @@ interface CourseInCatProps {
 }
 
 const CourseInCat = ({ e }: CourseInCatProps) => {
-  const [fav, setFav] = useState<boolean>(false);
+  const handleSuss = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Done",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+  const handleErr400 = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Already in Cart",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+  const handleErr401 = () => {
+    Swal.fire("You must login first!");
+  };
+  // const [fav, setFav] = useState<boolean>(false);
 
-  const [addFav] = useAddFavMutation();
-  const [deleteFav] = useDeleteFavMutation();
-
-  const AddFavF = () => {
-    addFav({ body: { courseId: e.id } })
+  // const [addFav] = useAddFavMutation();
+  const [addCart] = useAddCartMutation();
+  const AddCartF = () => {
+    addCart({ body: { courseId: e.id } })
       .unwrap()
       .then((fulfilled) => {
         console.log(fulfilled);
-        setFav(true);
+        handleSuss();
       })
       .catch((rejected) => {
         console.error(rejected);
+        if (rejected.status == 400) {
+          handleErr400();
+        }
+        if (rejected.status == 401) {
+          handleErr401();
+        }
       });
   };
-  const deleteFavF = () => {
-    deleteFav(e.id)
-      .unwrap()
-      .then((fulfilled) => {
-        console.log(fulfilled);
-        setFav(false);
-      })
-      .catch((rejected) => {
-        console.error(rejected);
-      });
-  };
+  // const [deleteFav] = useDeleteFavMutation();
+
+  // const AddFavF = () => {
+  //   addFav({ body: { courseId: e.id } })
+  //     .unwrap()
+  //     .then((fulfilled) => {
+  //       console.log(fulfilled);
+  //       setFav(true);
+  //     })
+  //     .catch((rejected) => {
+  //       if (rejected.status == 400) {
+  //         handleErr400();
+  //       }
+  //       if (rejected.status == 401) {
+  //         handleErr401();
+  //       }
+  //       console.error(rejected);
+  //     });
+  // };
+  // const deleteFavF = () => {
+  //   deleteFav(e.id)
+  //     .unwrap()
+  //     .then((fulfilled) => {
+  //       console.log(fulfilled);
+  //       setFav(false);
+  //     })
+  //     .catch((rejected) => {
+  //       console.error(rejected);
+  //     });
+  // };
 
   function formatDate(dateString: string) {
     const months = [
@@ -116,10 +166,13 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
           </p>
         </div>
         <div className=" flex gap-2">
-          <button className=" py-1 font-medium text-[16px] w-[90px] text-secondary hover:text-white transition bg-primary">
+          <button
+            onClick={() => AddCartF()}
+            className=" py-1 font-medium text-[16px] w-[90px] text-secondary hover:text-white transition bg-primary"
+          >
             Add to cart
           </button>
-          <span
+          {/* <span
             onClick={() => AddFavF()}
             className={` text-[38px] text-primary ${fav ? "hidden" : "block"}`}
           >
@@ -130,7 +183,7 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
             className={` text-[38px] text-primary ${fav ? "block" : " hidden"}`}
           >
             <MdFavorite />
-          </span>
+          </span> */}
         </div>
       </div>
     </div>

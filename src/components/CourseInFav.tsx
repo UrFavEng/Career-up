@@ -1,7 +1,6 @@
 import { FaHandPointRight } from "react-icons/fa6";
 import { MdFavorite } from "react-icons/md";
 import { useDeleteFavMutation } from "../store/apislice";
-import Swal from "sweetalert2";
 import { Hourglass } from "react-loader-spinner";
 
 interface Course {
@@ -36,22 +35,12 @@ interface CourseInFavProps {
   numOfPages: number;
 }
 const CourseInFav = ({ course, numOfPages }: CourseInFavProps) => {
-  const handleSuccess = () => {
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Done",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  };
   const [deleteFav, { isLoading }] = useDeleteFavMutation();
   console.log(numOfPages);
   const deleteFavF = () => {
     deleteFav(course.course.id)
       .unwrap()
       .then((fulfilled) => {
-        handleSuccess();
         console.log(fulfilled);
       })
       .catch((rejected) => {
@@ -83,7 +72,7 @@ const CourseInFav = ({ course, numOfPages }: CourseInFavProps) => {
     return `${day} ${monthName} ${year}`;
   }
   return (
-    <div className="flex parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
+    <div className="flex mt-12 parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
       <div className=" hidden border-primary border-[1px] w-[100%] min-h-[80%]  details-course md:block absolute bg-white py-2 px-3 right-[0px] z-50 top-[-100px]">
         <h1 className=" font-semibold text-[22px] text-text">
           What'll you learn?

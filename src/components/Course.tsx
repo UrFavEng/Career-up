@@ -29,7 +29,7 @@ interface CourseProps {
 }
 
 const Course = ({ CourseData }: CourseProps) => {
-  const [fav, setFav] = useState<boolean>(false);
+  // console.log(CourseData);
   // const handleSuccess = () => {
   //   Swal.fire({
   //     position: "center",
@@ -39,14 +39,26 @@ const Course = ({ CourseData }: CourseProps) => {
   //     timer: 1500,
   //   });
   // };
-  const handleErr400 = () => {
+  const handleErr400 = (type: string) => {
     Swal.fire({
       position: "center",
       icon: "success",
-      title: "Already in Cart",
+      title: `Already in ${type}`,
       showConfirmButton: false,
       timer: 1500,
     });
+  };
+  const handleSuss = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Done",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+  };
+  const handleErr401 = () => {
+    Swal.fire("You must login first!");
   };
   const [addFav] = useAddFavMutation();
   const [addCart] = useAddCartMutation();
@@ -56,22 +68,31 @@ const Course = ({ CourseData }: CourseProps) => {
       .unwrap()
       .then((fulfilled: AddFavRES) => {
         console.log(fulfilled);
-        setFav(true);
       })
       .catch((rejected) => {
         console.error(rejected);
+        if (rejected.status == 401) {
+          handleErr401();
+        }
+        if (rejected.status == 400) {
+          handleErr400("favorite");
+        }
       });
   };
   const AddCartF = () => {
     addCart({ body: { courseId: CourseData.id } })
       .unwrap()
       .then((fulfilled) => {
+        handleSuss();
         console.log(fulfilled);
       })
       .catch((rejected) => {
         console.error(rejected);
         if (rejected.status == 400) {
-          handleErr400();
+          handleErr400("cart");
+        }
+        if (rejected.status == 401) {
+          handleErr401();
         }
       });
   };
@@ -80,7 +101,6 @@ const Course = ({ CourseData }: CourseProps) => {
       .unwrap()
       .then((fulfilled) => {
         console.log(fulfilled);
-        setFav(false);
       })
       .catch((rejected) => {
         console.error(rejected);
@@ -165,21 +185,47 @@ const Course = ({ CourseData }: CourseProps) => {
           >
             Add to cart
           </button>
-          <span
-            onClick={() => AddFavF()}
-            className={`  text-[38px] text-primary ${fav ? "hidden" : "block"}`}
-          >
-            {/* {fav ? */}
-
-            <MdFavoriteBorder />
-            {/* //  : <MdFavoriteBorder />} */}
-          </span>
-          <span
-            onClick={() => deleteFavF()}
-            className={`text-[38px] text-primary ${fav ? "block" : " hidden"}`}
-          >
-            <MdFavorite />
-          </span>
+          {/* {CourseData.isFaved !== undefined && !CourseData.isFaved ? (
+            CourseData.isFaved ? (
+              <span
+                onClick={() => deleteFavF()}
+                className={`text-[38px] text-primary block`}
+              >
+                {" "}
+                <MdFavorite />{" "}
+              </span>
+            ) : (
+              <span
+                onClick={() => AddFavF()}
+                className={`text-[38px] text-primary  block`}
+              >
+                s{" "}
+              </span>
+            )
+          ) : (
+            <span
+              onClick={() => AddFavF()}
+              className={`text-[38px] text-primary  block`}
+            >
+              <MdFavoriteBorder />{" "}
+            </span>
+          )} */}
+          {CourseData.isFaved && CourseData.isFaved ? (
+            <span
+              onClick={() => deleteFavF()}
+              className={`text-[38px] text-primary block`}
+            >
+              {" "}
+              <MdFavorite />{" "}
+            </span>
+          ) : (
+            <span
+              onClick={() => AddFavF()}
+              className={`text-[38px] text-primary  block`}
+            >
+              <MdFavoriteBorder />
+            </span>
+          )}
         </div>
       </div>
       <div className="" onClick={() => navigate(`/Course/${CourseData.id}`)}>
