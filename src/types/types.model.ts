@@ -705,3 +705,47 @@ export interface GetAllFavsRES {
   };
 }
 // end get favs
+//start Add Cart
+interface AddCartCourse {
+  title: string;
+  price: number | null;
+  thumbnailUrl: string;
+  courseId: number;
+  teacherNames: string;
+}
+
+export interface AddCartResponse {
+  error: boolean;
+  message: string;
+  payload: {
+    course: AddCartCourse[];
+  };
+}
+
+//end Add Cart
+// start Delete Cart
+export interface DeleteCartResponse {
+  error: boolean;
+  message: string;
+  payload: Record<string, never>; // An empty object
+}
+
+// end Delete Cart
+// start Get all Cart
+interface GetAllCartCourse {
+  title: string;
+  price: number | null;
+  thumbnailUrl: string;
+  userId: number;
+  courseId: number;
+  teacherNames: string;
+}
+
+export interface GetAllCartResponse {
+  error: boolean;
+  message: string;
+  payload: {
+    courses: GetAllCartCourse[];
+  };
+}
+// end Get all Cart

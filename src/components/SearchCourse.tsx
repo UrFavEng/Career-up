@@ -30,7 +30,7 @@ const SearchCourse = () => {
             <>
               {" "}
               {data?.payload.courses.map((e) => (
-                <CourseInSearch e={e} />
+                <CourseInSearch e={e} key={e.id} />
               ))}
             </>
           )}

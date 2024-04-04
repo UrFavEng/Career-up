@@ -4,9 +4,14 @@ import { MdFavorite } from "react-icons/md";
 import { MdFavoriteBorder } from "react-icons/md";
 import { IoArrowUndoSharp } from "react-icons/io5";
 import { useEffect, useRef } from "react";
-import { useAddFavMutation, useDeleteFavMutation } from "../store/apislice";
+import {
+  useAddFavMutation,
+  useDeleteFavMutation,
+  useAddCartMutation,
+} from "../store/apislice";
 import { AddFavRES } from "../types/types.model";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 interface CourseProps {
   CourseData: {
     isFaved?: boolean | undefined;
@@ -25,8 +30,26 @@ interface CourseProps {
 
 const Course = ({ CourseData }: CourseProps) => {
   const [fav, setFav] = useState<boolean>(false);
-
+  // const handleSuccess = () => {
+  //   Swal.fire({
+  //     position: "center",
+  //     icon: "success",
+  //     title: "Done",
+  //     showConfirmButton: false,
+  //     timer: 1500,
+  //   });
+  // };
+  const handleErr400 = () => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Already in Cart",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
   const [addFav] = useAddFavMutation();
+  const [addCart] = useAddCartMutation();
   const [deleteFav] = useDeleteFavMutation();
   const AddFavF = () => {
     addFav({ body: { courseId: CourseData.id } })
@@ -37,6 +60,19 @@ const Course = ({ CourseData }: CourseProps) => {
       })
       .catch((rejected) => {
         console.error(rejected);
+      });
+  };
+  const AddCartF = () => {
+    addCart({ body: { courseId: CourseData.id } })
+      .unwrap()
+      .then((fulfilled) => {
+        console.log(fulfilled);
+      })
+      .catch((rejected) => {
+        console.error(rejected);
+        if (rejected.status == 400) {
+          handleErr400();
+        }
       });
   };
   const deleteFavF = () => {
@@ -123,7 +159,10 @@ const Course = ({ CourseData }: CourseProps) => {
           </div>
         </div>
         <div className=" flex gap-2 items-center">
-          <button className=" w-[80%] bg-primary text-secondary hover:text-white font-semibold text-[18px] py-2 px-6">
+          <button
+            onClick={() => AddCartF()}
+            className=" w-[80%] bg-primary text-secondary hover:text-white font-semibold text-[18px] py-2 px-6"
+          >
             Add to cart
           </button>
           <span

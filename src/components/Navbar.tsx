@@ -199,6 +199,12 @@ const Navbar = () => {
                           <li className="px-4 py-[5px] ease-in duration-200 border-b-2  cursor-pointer hover:bg-background text-text text-[16px] font-medium  hover:text-[#686868]">
                             My learning
                           </li>
+                          <li
+                            onClick={() => navigate("/allFavorites")}
+                            className="px-4 py-[5px] ease-in duration-200 border-b-2  cursor-pointer hover:bg-background text-text text-[16px] font-medium  hover:text-[#686868]"
+                          >
+                            Favourite Courses
+                          </li>
                           {!dataUser?.error && !error && (
                             <li
                               onClick={() => {
@@ -348,7 +354,10 @@ const Navbar = () => {
             >
               <FaSearch />
             </div>
-            <div className="block md:hidden text-[28px] cursor-pointer">
+            <div
+              onClick={() => navigate("/allCarts")}
+              className="block md:hidden text-[28px] cursor-pointer"
+            >
               <AiOutlineShoppingCart />
             </div>
             {/* md, lg and xl */}
@@ -502,7 +511,10 @@ const Navbar = () => {
                 {/* <div className=" text-[25px] xl:text-[32px] cursor-pointer">
                 <MdOutlineNotifications />
               </div> */}
-                <div className=" text-[25px] xl:text-[32px] cursor-pointer">
+                <div
+                  onClick={() => navigate("/allCarts")}
+                  className=" text-[25px] xl:text-[32px] cursor-pointer"
+                >
                   <AiOutlineShoppingCart />
                 </div>
                 <div

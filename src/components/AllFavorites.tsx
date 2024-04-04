@@ -3,6 +3,7 @@ import { useGetAllFavQuery } from "../store/apislice";
 import CourseInFav from "./CourseInFav";
 import { useState } from "react";
 import { Hourglass } from "react-loader-spinner";
+import { img4 } from "../assests";
 
 const AllFavorites = () => {
   const onPageChange = (page: number) => setCurrentPage(page);
@@ -11,9 +12,9 @@ const AllFavorites = () => {
   const { data, isLoading } = useGetAllFavQuery();
   console.log(data?.payload.numOfPages);
   return (
-    <>
+    <div className="min-h-[68vh]">
       {" "}
-      <div className=" z-0 flex gap-3 flex-row flex-wrap items-center justify-center pt-8 min-h-[60vh]">
+      <div className=" z-0 flex gap-3 flex-row flex-wrap items-center justify-center pt-8 ">
         {isLoading ? (
           <div className="pt-2">
             {" "}
@@ -49,7 +50,25 @@ const AllFavorites = () => {
           showIcons
         />
       </div>
-    </>
+      <div className=" flex justify-center items-center">
+        <div className=" px-8 md:px-2 py-4 sm:py-8 md:py-8 w-[300px] sm:w-[95%] lg:w-[80%]  bg-white border-2 shadow-md my-4 flex-col sm:flex-row flex justify-center items-center gap-8">
+          <div className=" max-w-[225px] md:w-[30%] lg:w-[25%]">
+            <img src={img4} alt="" className=" object-contain w-full" />
+          </div>
+          <div className=" md:w-[55%] lg:w-[60%] flex flex-col gap-4">
+            <h3 className=" font-bold text-[22px] leading-6 md:text-[26px] text-text">
+              Empower yourself with the key to success - invest in knowledge
+              today!
+            </h3>
+            <p className="  text-accent-1 leading-[18px] w-[95%]">
+              Take control of your future and expand your knowledge base! Invest
+              in courses now to refine your skills and fulfill your personal and
+              career objectives.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

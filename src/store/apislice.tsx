@@ -29,6 +29,9 @@ import {
   UpdateVidResponse,
   UpdateVidInfo,
   GetAllFavsRES,
+  AddCartResponse,
+  DeleteCartResponse,
+  GetAllCartResponse,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -36,7 +39,7 @@ export const apiSlice = createApi({
     baseUrl: "https://e-learning-5rhj.onrender.com/api/v1/",
     credentials: "include",
   }),
-  tagTypes: ["user", "TeachingCourse", "fav"],
+  tagTypes: ["user", "TeachingCourse", "fav", "cart"],
 
   endpoints: (builder) => ({
     signUp: builder.mutation<CreateUserResponse, UserSignUP>({
@@ -121,12 +124,27 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["fav"],
     }),
+    addCart: builder.mutation<AddCartResponse, { body: { courseId: number } }>({
+      query: ({ body }) => ({
+        url: `carts/addToCart`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["cart"],
+    }),
     deleteFav: builder.mutation<DeleteFavResponse, number>({
       query: (id) => ({
         url: `/favorites/deleteFavorite/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["fav"],
+    }),
+    deleteCart: builder.mutation<DeleteCartResponse, number>({
+      query: (id) => ({
+        url: `/carts/deleteFromCart/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["cart"],
     }),
     addNewSec: builder.mutation<addNewSecRes, addNewSec>({
       query: (body) => ({
@@ -158,6 +176,10 @@ export const apiSlice = createApi({
     getAllFav: builder.query<GetAllFavsRES, void>({
       query: () => `/favorites/allFavorites`,
       providesTags: ["fav"],
+    }),
+    getAllCart: builder.query<GetAllCartResponse, void>({
+      query: () => `/carts/allCartCourses`,
+      providesTags: ["cart"],
     }),
     getCourseById: builder.query<getCourseByIdResponse, string | undefined>({
       query: (id) => `courses/getCourseById/${id}`,
@@ -225,4 +247,7 @@ export const {
   useUploadVideoMutation,
   useDeleteVideoMutation,
   useUpdataVidMutation,
+  useAddCartMutation,
+  useDeleteCartMutation,
+  useGetAllCartQuery,
 } = apiSlice;

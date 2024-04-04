@@ -18,6 +18,7 @@ import {
 import { Course } from ".";
 import Qoute from "./Qoute";
 import { useNavigate } from "react-router-dom";
+// import { useForm } from "react-hook-form";
 const MainPage = () => {
   const navigate = useNavigate();
   const { data: getHome, isLoading: getHomeLoading } = useGetHomeQuery();
@@ -205,7 +206,7 @@ const MainPage = () => {
         // console.log(rejected);
       });
   };
-
+  // const { handleSubmit, register } = useForm<FormValues>();
   return (
     <div>
       <div className="HeroSec container h-[70vh] overflow-hidden sm:h-[500px] md:h-auto flex flex-col justify-center">
@@ -227,7 +228,17 @@ const MainPage = () => {
                   Technology and the world of work change fast — with us, you’re
                   faster. Get the skills to achieve goals and stay competitive.
                 </p>
-                <form className=" bg-transparent  mt-[20px] block md:hidden w-[100%] relative">
+                <form
+                  className=" bg-transparent  mt-[20px] block md:hidden w-[100%] relative"
+                  onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                    e.preventDefault();
+                    const formElement = e.target as HTMLFormElement;
+                    const searchValue = (
+                      formElement.elements[0] as HTMLInputElement
+                    ).value;
+                    navigate(`/searchCourse/${searchValue}`);
+                  }}
+                >
                   <input
                     className=" text-[17px] font-semibold pl-4 focus:outline-none h-[40px] w-[100%] bg-transparent border-[1px] border-[#bcbcbc]"
                     type="text"
@@ -263,7 +274,17 @@ const MainPage = () => {
                   Skills for your present (and your future). Get started with
                   us.
                 </p>{" "}
-                <form className="  bg-transparent mt-[40px] block md:hidden w-[100%] relative">
+                <form
+                  className="  bg-transparent mt-[40px] block md:hidden w-[100%] relative"
+                  onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                    e.preventDefault();
+                    const formElement = e.target as HTMLFormElement;
+                    const searchValue = (
+                      formElement.elements[0] as HTMLInputElement
+                    ).value;
+                    navigate(`/searchCourse/${searchValue}`);
+                  }}
+                >
                   <input
                     className=" text-[17px] font-semibold pl-4 focus:outline-none h-[40px] w-[100%] bg-transparent border-[1px] border-[#bcbcbc]"
                     type="text"
