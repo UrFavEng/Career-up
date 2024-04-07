@@ -7,6 +7,7 @@ import {
 } from "../store/apislice";
 import { CoursesSearch } from "../types/types.model";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 interface CourseInCatProps {
   e: CoursesSearch;
@@ -83,8 +84,13 @@ const CourseInSearch = ({ e }: CourseInCatProps) => {
         }
       });
   };
+  const navigate = useNavigate();
+
   return (
-    <div className="flex parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
+    <div
+      onClick={() => navigate(`/Course/${e.id}`)}
+      className="flex parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition"
+    >
       <div className=" hidden border-primary border-[1px] w-[100%] min-h-[80%]  details-course md:block absolute bg-white py-2 px-3 right-[0px] z-50 top-[-100px]">
         <h1 className=" font-semibold text-[22px] text-text">
           What'll you learn?

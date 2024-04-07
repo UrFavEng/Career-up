@@ -749,3 +749,107 @@ export interface GetAllCartResponse {
   };
 }
 // end Get all Cart
+//start get course by id public
+interface CourseByIdPublicTeacher {
+  id: number;
+  fullname: string;
+  email: string;
+  password: string;
+  role: string;
+  gender: string | null;
+  bio: string | null;
+  avatarUrl: string;
+  phoneNum: string | null;
+  points: number;
+  job: string | null;
+  websiteUrl: string | null;
+  facebookUrl: string | null;
+  twitterUrl: string | null;
+  youtubeUrl: string | null;
+  linkedinUrl: string | null;
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  courseTeacher: {
+    courseId: number;
+    teacherId: number;
+  };
+  numOfTeachingCourses: number;
+  totalStudentsEnrolled: string;
+  totalReviews: string;
+}
+
+export interface CourseByIdPublicSectionVideo {
+  title: string;
+  id: number;
+  length: number;
+  order: number;
+  public: boolean;
+  sectionId: number;
+}
+
+export interface getCourseByIdPublicSection {
+  id: number;
+  title: string;
+  order: number;
+  courseId: number;
+  totalLength: number | null;
+  numOfVideos: string;
+  videos: CourseByIdPublicSectionVideo[];
+}
+
+interface getCourseByIdPublicCategory {
+  id: number;
+  categoryName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface getCoursebyidPublic {
+  id: number;
+  previewVideoUrl: string | null;
+  thumbnailUrl: string;
+  title: string;
+  subtitle: string;
+  desc: string;
+  beneficiaries: any; // You might want to define the type for this if it's known
+  outline: string[];
+  prerequisites: string[];
+  price: number;
+  allowPoints: boolean;
+  status: string;
+  lang: string;
+  level: string;
+  views: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  categoryId: number;
+  totalReviewsRate: any; // You might want to define the type for this if it's known
+  totalLength: number;
+  numOfVideos: string;
+  numOfSections: string;
+  teachers: CourseByIdPublicTeacher[];
+  sections: getCourseByIdPublicSection[];
+  reviews: any[]; // You might want to define the type for this if it's known
+  category: getCourseByIdPublicCategory;
+  favorites: any[]; // You might want to define the type for this if it's known
+  carts: any[]; // You might want to define the type for this if it's known
+  numOfEnrolledStudents: number;
+  numOfCourseReviews: number;
+  publicVideos: {
+    sections: any[]; // You might want to define the type for this if it's known
+  };
+  isEnrolled: boolean;
+}
+
+export interface GetCourseByIdPublicResponse {
+  error: boolean;
+  message: string;
+  payload: {
+    course: getCoursebyidPublic;
+  };
+}
+
+//end get course by id public

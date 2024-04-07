@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useDeleteCartMutation } from "../store/apislice";
 
 interface CourseProps {
@@ -23,8 +24,13 @@ const CourseInCart = ({ course }: CourseProps) => {
       });
   };
   console.log(course);
+  const navigate = useNavigate();
+
   return (
-    <div className="flex  relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
+    <div
+      onClick={() => navigate(`/Course/${course.courseId}`)}
+      className="flex  relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition"
+    >
       <div className="md:w-[40%]">
         <img src={course.thumbnailUrl} alt="" className="  object-contain" />
       </div>

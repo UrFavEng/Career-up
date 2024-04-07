@@ -23,7 +23,7 @@ import {
   UpdateSecResponse,
   SectionUpdateRES,
   DeleteFavResponse,
-  getCourseByIdResponse,
+  // getCourseByIdResponse,
   UploadVideoResponse,
   DeleteVideo,
   UpdateVidResponse,
@@ -32,6 +32,7 @@ import {
   AddCartResponse,
   DeleteCartResponse,
   GetAllCartResponse,
+  GetCourseByIdPublicResponse,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -182,9 +183,9 @@ export const apiSlice = createApi({
       query: () => `/carts/allCartCourses`,
       providesTags: ["cart"],
     }),
-    getCourseById: builder.query<getCourseByIdResponse, string | undefined>({
-      query: (id) => `courses/getCourseById/${id}`,
-    }),
+    // getCourseById: builder.query<getCourseByIdResponse, string | undefined>({
+    //   query: (id) => `courses/getCourseById/${id}`,
+    // }),
     UploadVideo: builder.mutation<
       UploadVideoResponse,
       { body: FormData; id: string | number | undefined }
@@ -218,6 +219,12 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["TeachingCourse"],
     }),
+    getCourseByIdPublic: builder.query<
+      GetCourseByIdPublicResponse,
+      string | undefined
+    >({
+      query: (id) => `/courses/getCourseById/${id}`,
+    }),
   }),
 });
 
@@ -244,11 +251,12 @@ export const {
   useDeleteSecMutation,
   useEditNewSecMutation,
   useGetAllFavQuery,
-  useGetCourseByIdQuery,
+  // useGetCourseByIdQuery,
   useUploadVideoMutation,
   useDeleteVideoMutation,
   useUpdataVidMutation,
   useAddCartMutation,
   useDeleteCartMutation,
   useGetAllCartQuery,
+  useGetCourseByIdPublicQuery,
 } = apiSlice;
