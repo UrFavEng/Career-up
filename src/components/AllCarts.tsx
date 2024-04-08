@@ -7,10 +7,22 @@ import CourseInCart from "./CourseInCart";
 
 const AllCarts = () => {
   const { data, isLoading } = useGetAllCartQuery();
-  console.log(data?.payload.courses[0]);
+  const totalPrices = data?.payload.courses.reduce(
+    (acc, current) => acc + (current.price ?? 0),
+    0
+  );
+  const totalPriceDisplay =
+    totalPrices === 0 ? "Free" : totalPrices?.toString();
 
+  console.log(totalPriceDisplay);
   return (
     <div className="min-h-[70vh] flex items-center justify-center flex-col">
+      {" "}
+      <h4 className=" text-[28px] font-semibold text-primary flex gap-1 items-center">
+        {" "}
+        <span className=" text-text text-[20px]">Price:</span>{" "}
+        {totalPriceDisplay}
+      </h4>
       <div className=" z-0 flex gap-3 flex-row flex-wrap items-center justify-center pt-8">
         {isLoading ? (
           <div className="pt-2">

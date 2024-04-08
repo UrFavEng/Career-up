@@ -75,10 +75,7 @@ const CourseInFav = ({ course, numOfPages }: CourseInFavProps) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      onClick={() => navigate(`/Course/${course.courseId}`)}
-      className="flex mt-12 parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition"
-    >
+    <div className="flex mt-12 parent-details-course relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
       <div className=" hidden border-primary border-[1px] w-[100%] min-h-[80%]  details-course md:block absolute bg-white py-2 px-3 right-[0px] z-50 top-[-100px]">
         <h1 className=" font-semibold text-[22px] text-text">
           What'll you learn?
@@ -100,7 +97,10 @@ const CourseInFav = ({ course, numOfPages }: CourseInFavProps) => {
           )}
         </ul>
       </div>
-      <div className="md:w-[40%]">
+      <div
+        onClick={() => navigate(`/Course/${course.courseId}`)}
+        className="md:w-[40%]"
+      >
         <img
           src={course.course.thumbnailUrl}
           alt=""
@@ -108,7 +108,7 @@ const CourseInFav = ({ course, numOfPages }: CourseInFavProps) => {
         />
       </div>
       <div className=" flex flex-col justify-between md:w-[55%] px-2 gap-4 md:gap-0 md:pr-4 py-2">
-        <div>
+        <div onClick={() => navigate(`/Course/${course.courseId}`)}>
           <h1 className=" leading-6 text-[22px] font-bold text-text flex items-center justify-between w-full">
             {course.course.title}{" "}
             <span className="text-[14px] font-bold text-primary">

@@ -225,6 +225,9 @@ export const apiSlice = createApi({
     >({
       query: (id) => `/courses/getCourseById/${id}`,
     }),
+    checkOut: builder.query({
+      query: () => `orders/checkout`,
+    }),
   }),
 });
 
@@ -259,4 +262,5 @@ export const {
   useDeleteCartMutation,
   useGetAllCartQuery,
   useGetCourseByIdPublicQuery,
+  useCheckOutQuery,
 } = apiSlice;

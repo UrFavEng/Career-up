@@ -23,19 +23,18 @@ const CourseInCart = ({ course }: CourseProps) => {
         console.error(rejected);
       });
   };
-  console.log(course);
   const navigate = useNavigate();
 
   return (
-    <div
-      onClick={() => navigate(`/Course/${course.courseId}`)}
-      className="flex  relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition"
-    >
-      <div className="md:w-[40%]">
+    <div className="flex  relative cursor-pointer flex-col md:flex-row gap-3 basis-[175px] sm:basis-[185px] md:basis-[355px] lg:basis-[400px] bg-background hover:bg-[#F5F5F5] border-2 shadow-md hover:shadow-2xl hover:scale-105 transition">
+      <div
+        onClick={() => navigate(`/Course/${course.courseId}`)}
+        className="md:w-[40%]"
+      >
         <img src={course.thumbnailUrl} alt="" className="  object-contain" />
       </div>
       <div className=" justify-between flex flex-col  md:w-[55%] px-2 gap-4 md:gap-0 md:pr-4 py-2">
-        <div>
+        <div onClick={() => navigate(`/Course/${course.courseId}`)}>
           <h1 className=" leading-6 text-[22px] font-bold text-text flex items-center justify-between w-full">
             {course.title}
           </h1>
