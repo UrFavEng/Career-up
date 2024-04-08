@@ -10,7 +10,9 @@ import img3 from "./img3.png";
 import img4 from "./img4.png";
 import img5 from "./img5.png";
 import img6 from "./img6.webp";
+import testVid from "./testvid.mp4";
 export {
+  testVid,
   mainPage1,
   mainPage2,
   mainPage1min,

@@ -54,7 +54,7 @@ const CourseById = () => {
     return date.toLocaleDateString("en-US", options);
   }
   return (
-    <div className=" min-h-[77vh]  relative container py-4 ">
+    <div className=" min-h-[77vh] container py-4 ">
       {isLoading ? (
         <div className=" flex items-center justify-center h-full">
           <Hourglass
