@@ -1,18 +1,20 @@
 import { GoFile } from "react-icons/go";
 import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import { HiMiniBars2 } from "react-icons/hi2";
 import {
   useDeleteSecMutation,
-  useDeleteVideoMutation,
+  // useDeleteVideoMutation,
   useEditNewSecMutation,
 } from "../store/apislice";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import UploadVideo from "./UploadVideo";
-import UpdateVideo from "./UpdateVideo";
+// import UpdateVideo from "./UpdateVideo";
 import { Hourglass } from "react-loader-spinner";
 import Swal from "sweetalert2";
+import LectureInSection from "./LectureInSection";
 interface SectionGetCourseVideo {
   title: string;
   id: number;
@@ -32,11 +34,37 @@ interface SectionCourseProps {
     numOfVideos: string;
     videos: SectionGetCourseVideo[];
   };
+  dragPerson: MutableRefObject<number>;
+  targetSectionId: MutableRefObject<number>;
+  dragVideo: MutableRefObject<number>;
+  draggedOverVideo: MutableRefObject<number>;
+  currentSectionId: MutableRefObject<number>;
+  draggedOverPerson: MutableRefObject<number>;
+  setDragPersonId: (val: number) => void;
+  setDragVideoId: (val: number) => void;
+  handleSort: () => void;
+  handleSortVideo: () => void;
+  index: number;
 }
 interface FormValues {
   sectionTitle: string;
 }
-const SectionCourse = ({ SectionData }: SectionCourseProps) => {
+const SectionCourse = ({
+  SectionData,
+  draggedOverPerson,
+  dragPerson,
+  setDragPersonId,
+  index,
+  handleSort,
+  handleSortVideo,
+  setDragVideoId,
+  targetSectionId,
+  dragVideo,
+  draggedOverVideo,
+  currentSectionId,
+}: SectionCourseProps) => {
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
   const handleSuccess = () => {
     Swal.fire({
       position: "center",
@@ -51,7 +79,7 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
   const { id } = useParams<{ id: string | undefined }>();
   const NumID = Number(id);
   const [deleteSec, { isLoading: loadingDeleteSec }] = useDeleteSecMutation();
-  const [deleteVid, { isLoading: loadingDeleteVid }] = useDeleteVideoMutation();
+  // const [deleteVid, { isLoading: loadingDeleteVid }] = useDeleteVideoMutation();
   const handleDeleteSec = () => {
     const dataDelete = {
       courseId: NumID,
@@ -67,23 +95,23 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
         console.error(rejected);
       });
   };
-  const handleDeleteVid = (id: number) => {
-    const body = { courseId: SectionData.courseId, sectionId: SectionData.id };
-    console.log(body);
-    deleteVid({ body, id })
-      .unwrap()
-      .then((fulfilled) => {
-        handleSuccess();
-        console.log(fulfilled);
-      })
-      .catch((rejected) => {
-        console.error(rejected);
-      });
-  };
+  // const handleDeleteVid = (id: number) => {
+  //   const body = { courseId: SectionData.courseId, sectionId: SectionData.id };
+  //   console.log(body);
+  //   deleteVid({ body, id })
+  //     .unwrap()
+  //     .then((fulfilled) => {
+  //       handleSuccess();
+  //       console.log(fulfilled);
+  //     })
+  //     .catch((rejected) => {
+  //       console.error(rejected);
+  //     });
+  // };
   const { handleSubmit, setValue, register } = useForm<FormValues>();
   useEffect(() => {
     setValue("sectionTitle", SectionData.title);
-  }, []);
+  }, [SectionData]);
 
   const [editNewSec, { isLoading: loadingEditSec }] = useEditNewSecMutation();
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -99,10 +127,48 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
         console.log(rejected);
       });
   };
-  const [showAdd, setShowAdd] = useState<boolean>(false);
+  // const [showAdd, setShowAdd] = useState<boolean>(false);
   return (
-    <div className=" cursor-move  border-2 py-5 px-2 bg-background div-esc">
-      <div className=" flex items-center gap-2">
+    <div
+      onDragEnter={() => {
+        targetSectionId.current = SectionData.id;
+      }}
+      onDragEnd={() => {
+        // handleSortVideo();
+        setDragOverIndex(null); // إعادة تعيين حالة dragOverIndex إلى null عند انتهاء السحب والإفلات
+      }}
+      className=" border-2 relative py-5 bg-background div-esc"
+    >
+      {dragOverIndex === index && (
+        <div className="w-full top-0 absolute flex items-center h-[2px] bg-[#115169]"></div>
+      )}
+      <div className="px-2 flex items-center gap-2">
+        <span
+          draggable
+          onDragLeave={() => {
+            if (dragOverIndex === index) {
+              setDragOverIndex(null);
+            }
+          }}
+          onDragStart={() => {
+            dragPerson.current = SectionData.order;
+            setDragPersonId(SectionData.id);
+          }}
+          onDragEnter={() => {
+            draggedOverPerson.current = SectionData.order;
+            setDragOverIndex(index);
+          }}
+          onDragEnd={() => {
+            handleSort();
+            setDragOverIndex(null); // إعادة تعيين حالة dragOverIndex إلى null عند انتهاء السحب والإفلات
+          }}
+          onDragOver={(e) => {
+            e.preventDefault();
+          }}
+          className=" text-primary text-[24px]  mr-[-5px] cursor-grab"
+        >
+          <HiMiniBars2 />
+        </span>{" "}
         Unpublished Section:{" "}
         <span>
           <GoFile />
@@ -171,13 +237,40 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
           </span>
         )}
       </div>
-      <div className=" mb-2">
+      <div className="px-2 mb-2">
         <h3 className=" text-[22px] pt-1 font-semibold text-accent-1">
           Videos:
         </h3>
-        {SectionData.videos.map((v) => (
+        {SectionData.videos.length == 0 && (
+          <div
+            draggable
+            onDragLeave={() => {}}
+            onDragStart={() => {}}
+            onDragEnter={() => {}}
+            onDragEnd={() => {}}
+            onDragOver={(e) => {
+              e.preventDefault();
+            }}
+            className="bg-secondary text-text py-[12px] border-2 text-center font-bold text-[18px]"
+          >
+            Drop here
+          </div>
+        )}
+        {SectionData.videos.map((v, index) => (
           <>
-            <div className="bg-secondary border-2" key={v.id}>
+            <LectureInSection
+              index={index}
+              targetSectionId={targetSectionId}
+              dragVideo={dragVideo}
+              draggedOverVideo={draggedOverVideo}
+              currentSectionId={currentSectionId}
+              setDragVideoId={setDragVideoId}
+              handleSortVideo={handleSortVideo}
+              key={v.id}
+              v={v}
+              SectionData={SectionData}
+            />
+            {/* <div className="bg-secondary border-2" key={v.id}>
               {" "}
               <div className="cursor-move div-vid  py-2 flex items-center ">
                 <span className=" font-medium text-text text-[17px] px-2">
@@ -221,13 +314,13 @@ const SectionCourse = ({ SectionData }: SectionCourseProps) => {
                 DataVideo={v}
                 CourseId={SectionData.courseId}
               />
-            </div>
+            </div> */}
           </>
         ))}
       </div>
       <h1
         onClick={() => setShowAddVideo(!showAddVideo)}
-        className=" cursor-pointer w-fit font-medium text-accent-1 hover:text-black py-[6px] px-2 bg-secondary"
+        className=" cursor-pointer w-fit font-medium text-accent-1 hover:text-black py-[6px] px-2 mx-2 bg-secondary"
       >
         Upload Lecture
       </h1>

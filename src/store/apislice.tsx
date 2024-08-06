@@ -33,6 +33,9 @@ import {
   DeleteCartResponse,
   GetAllCartResponse,
   GetCourseByIdPublicResponse,
+  changeOrderSectionREQ,
+  changeOrderSectionRES,
+  changeOrderVideoREQ,
 } from "../types/types.model";
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -228,6 +231,28 @@ export const apiSlice = createApi({
     checkOut: builder.query({
       query: () => `orders/checkout`,
     }),
+    changeOrderSection: builder.mutation<
+      changeOrderSectionRES,
+      { body: changeOrderSectionREQ; id: string | number | undefined }
+    >({
+      query: ({ body, id }) => ({
+        url: `/sections/changeOrder/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
+    changeOrderVideo: builder.mutation<
+      changeOrderSectionRES,
+      { body: changeOrderVideoREQ; id: string | number | undefined }
+    >({
+      query: ({ body, id }) => ({
+        url: `/videos/changeOrder/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["TeachingCourse"],
+    }),
   }),
 });
 
@@ -263,4 +288,6 @@ export const {
   useGetAllCartQuery,
   useGetCourseByIdPublicQuery,
   useCheckOutQuery,
+  useChangeOrderSectionMutation,
+  useChangeOrderVideoMutation,
 } = apiSlice;

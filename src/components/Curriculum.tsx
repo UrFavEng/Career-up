@@ -1,13 +1,105 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAddNewSecMutation, useGetCourseByidQuery } from "../store/apislice";
+import {
+  useAddNewSecMutation,
+  useChangeOrderSectionMutation,
+  useChangeOrderVideoMutation,
+  useGetCourseByidQuery,
+} from "../store/apislice";
 import { useParams } from "react-router-dom";
 import SectionCourse from "./SectionCourse";
 import { Hourglass } from "react-loader-spinner";
 import Swal from "sweetalert2";
+import { useRef, useState } from "react";
 interface dataTS {
   sectionTitle: string;
 }
 const Curriculum = () => {
+  const targetSectionId = useRef<number>(0);
+  const currentSectionId = useRef<number>(0);
+  const dragVideo = useRef<number>(0);
+  const draggedOverVideo = useRef<number>(0);
+  const [dragVideoId, setDragVideoId] = useState<number>();
+  const { id } = useParams<{ id: string | undefined }>();
+  const { data, isLoading, isError, error } = useGetCourseByidQuery(id);
+  const [changeOrderSection] = useChangeOrderSectionMutation();
+  const [changeOrderVideo, { error: errSortVideo }] =
+    useChangeOrderVideoMutation();
+  console.log(errSortVideo);
+  const dragPerson = useRef<number>(0);
+  const draggedOverPerson = useRef<number>(0);
+  const [dragPersonId, setDragPersonId] = useState<number>();
+  const handleErr = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+    });
+  };
+  const handleErrLogin = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "You must log in",
+    });
+  };
+  const handleSortVideo = () => {
+    const targetSectionid = targetSectionId.current;
+    const currentSectionid = currentSectionId.current;
+    const currentOrder = dragVideo.current;
+    const newOrder = draggedOverVideo.current;
+    const courseId = data?.payload.course.id;
+    // Make sure currentOrder and newOrder are different
+    // if (currentOrder !== newOrder && courseId && currentOrder && newOrder) {
+    const body = {
+      targetSectionId: targetSectionid,
+      currentSectionId: currentSectionid,
+      currentOrder: currentOrder,
+      newOrder: newOrder,
+      courseId: courseId,
+    };
+    console.log(body);
+    changeOrderVideo({ body, id: dragVideoId })
+      .unwrap()
+      .then((fulfilled) => {
+        // refetch();
+        console.log(fulfilled);
+      })
+      .catch((rejected) => {
+        if (rejected.status == 401) {
+          handleErrLogin();
+        } else {
+          handleErr();
+        }
+      });
+    // }
+  };
+  const handleSort = () => {
+    const currentOrder = dragPerson.current;
+    const newOrder = draggedOverPerson.current;
+    const courseId = data?.payload.course.id;
+    // Make sure currentOrder and newOrder are different
+    // if (currentOrder !== newOrder && courseId && currentOrder && newOrder) {
+    const body = {
+      courseId: courseId,
+      currentOrder: currentOrder,
+      newOrder: newOrder,
+    };
+    console.log(courseId, currentOrder, newOrder);
+    changeOrderSection({ body, id: dragPersonId })
+      .unwrap()
+      .then((fulfilled) => {
+        // refetch();
+        console.log(fulfilled);
+      })
+      .catch((rejected) => {
+        if (rejected.status == 401) {
+          handleErrLogin();
+        } else {
+          handleErr();
+        }
+      });
+    // }
+  };
   const handleSuccess = () => {
     Swal.fire({
       position: "center",
@@ -17,9 +109,8 @@ const Curriculum = () => {
       timer: 1500,
     });
   };
-  const { id } = useParams<{ id: string | undefined }>();
-  const { data, isLoading, isFetching, isError, error } =
-    useGetCourseByidQuery(id);
+
+  // console.log(data);
   const IDNum = Number(id);
   const [AddNewSec, { isLoading: loadingAddNewSec }] = useAddNewSecMutation();
   const { handleSubmit, register } = useForm<dataTS>();
@@ -39,6 +130,7 @@ const Curriculum = () => {
         console.log(rejected);
       });
   };
+
   return (
     <div className=" container rounded-md border-2 shadow-2xl my-4 bg-white shadow-[#b3b3b3]">
       {" "}
@@ -94,7 +186,7 @@ const Curriculum = () => {
           </div>
           <div className=" py-4">
             <div className=" flex gap-4 flex-col">
-              {isLoading || isFetching ? (
+              {isLoading ? (
                 <div className=" py-8 flex justify-center items-center">
                   {" "}
                   <Hourglass
@@ -110,8 +202,22 @@ const Curriculum = () => {
               ) : (
                 <>
                   {" "}
-                  {data?.payload.course.sections.map((sec) => (
-                    <SectionCourse SectionData={sec} key={sec.id} />
+                  {data?.payload.course.sections.map((sec, index) => (
+                    <SectionCourse
+                      index={index}
+                      SectionData={sec}
+                      key={sec.id}
+                      dragPerson={dragPerson}
+                      draggedOverPerson={draggedOverPerson}
+                      setDragPersonId={setDragPersonId}
+                      handleSort={handleSort}
+                      handleSortVideo={handleSortVideo}
+                      currentSectionId={currentSectionId}
+                      targetSectionId={targetSectionId}
+                      draggedOverVideo={draggedOverVideo}
+                      dragVideo={dragVideo}
+                      setDragVideoId={setDragVideoId}
+                    />
                   ))}
                 </>
               )}

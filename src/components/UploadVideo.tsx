@@ -50,7 +50,7 @@ const UploadVideo = ({ SectionData }: SectionCourseProps) => {
       });
   };
   return (
-    <form action="" className=" mt-2" onSubmit={handleSubmit(onSubmit)}>
+    <form action="" className="mx-2 mt-2" onSubmit={handleSubmit(onSubmit)}>
       <div className=" flex flex-col">
         <label
           htmlFor="title"

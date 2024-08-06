@@ -853,3 +853,27 @@ export interface GetCourseByIdPublicResponse {
 }
 
 //end get course by id public
+export interface changeOrderSectionREQ {
+  courseId?: number;
+  currentOrder?: number;
+  newOrder?: number;
+}
+export interface changeOrderSectionRES {
+  error: boolean;
+  message: string;
+  payload: {
+    newSection: {
+      courseId: number;
+      id: number;
+      order: number;
+      title: string;
+    };
+  };
+}
+export interface changeOrderVideoREQ {
+  targetSectionId?: number;
+  currentSectionId?: number;
+  currentOrder?: number;
+  newOrder?: number;
+  courseId?: number;
+}
