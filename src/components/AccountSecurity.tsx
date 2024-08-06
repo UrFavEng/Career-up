@@ -79,7 +79,7 @@ const AccountSecurity = () => {
   return (
     <>
       <div className="container py-[30px]">
-        <div className=" min-h[68vh] border-2">
+        <div className=" min-h-[60vh] border-2">
           <div className=" border-b-2 py-[10px] flex items-center justify-center gap-2 sm:gap-4 flex-col sm:flex-row">
             <div
               onClick={() => {

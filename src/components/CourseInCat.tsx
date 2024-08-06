@@ -140,7 +140,7 @@ const CourseInCat = ({ e }: CourseInCatProps) => {
           {e.outline ? (
             <>
               {e.outline?.map((e) => (
-                <li className="flex gap-2 items-start justify-between">
+                <li key={e} className="flex gap-2 items-start justify-between">
                   <span className=" text-primary text-[16px]">
                     <FaHandPointRight />
                   </span>

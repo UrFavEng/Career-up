@@ -21,7 +21,12 @@ import { useNavigate } from "react-router-dom";
 // import { useForm } from "react-hook-form";
 const MainPage = () => {
   const navigate = useNavigate();
-  const { data: getHome, isLoading: getHomeLoading } = useGetHomeQuery();
+  const {
+    data: getHome,
+    isLoading: getHomeLoading,
+    isError,
+    isFetching,
+  } = useGetHomeQuery();
   const { data: dataUser, error: errGetme } = useGetmeQuery();
   const splideOptions = {
     perMove: 1,
@@ -168,6 +173,13 @@ const MainPage = () => {
       title: "You'r an Instructor now",
     });
   };
+  const handleErr = () => {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong!",
+    });
+  };
   const [beInstructor] = useBeInstructorMutation();
   const sweetAlertbeInstructor = () => {
     let timerInterval: NodeJS.Timeout | null = null; // تعيين قيمة افتراضية مناسبة
@@ -202,6 +214,7 @@ const MainPage = () => {
         // console.log(fulfilled.payload.user.role);
       })
       .catch(() => {
+        handleErr();
         // console.log(rejected);
       });
   };
@@ -315,67 +328,78 @@ const MainPage = () => {
           </h1>
           <div className=" hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4  pb-4 pt-4">
             {randomQuotes.map((e) => (
-              <Qoute QouteData={e} key={e.quote} />
+              <Qoute QouteData={e} key={Math.random()} />
             ))}
           </div>
         </div>
       </div>
-      {getHomeLoading ? (
-        <div className=" pt-40 pb-72 flex justify-center items-center">
-          {" "}
-          <Hourglass
-            visible={true}
-            height="100"
-            width="100"
-            ariaLabel="hourglass-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            colors={["#EC5252", "#ec525252"]}
-          />
-        </div>
+      {isError ? (
+        <p className=" pt-40 pb-72 flex justify-center items-center text-primary font-medium text-[18px]">
+          Something went wrong on our end. Please try again laters
+        </p>
       ) : (
         <>
           {" "}
-          <div className="splid-Courses-MainPage pb-10 pt-2 container">
-            <h3 className=" px-4 mt-4 text-[24px] md:text-[26px] font-medium md:font-semibold  tracking-[-1px] w-[90%] leading-7">
-              Pick Your Courses: A Curated List of Recommended Courses for You
-            </h3>
-            <div className="  block">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoXL}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
+          {getHomeLoading || isFetching ? (
+            <div className=" pt-40 pb-72 flex justify-center items-center">
+              {" "}
+              <Hourglass
+                visible={true}
+                height="100"
+                width="100"
+                ariaLabel="hourglass-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                colors={["#EC5252", "#ec525252"]}
+              />
             </div>
-          </div>
-          <div className="splid-Courses-MainPage mt-[-90px] pb-10 pt-2 border-t-2 container">
-            <h3 className=" px-4 mt-4 text-[24px] md:text-[26px] font-medium md:font-semibold tracking-[-1px] w-[90%] leading-7">
-              Discover the Hottest Courses: Bestsellers for Success{" "}
-            </h3>
-            <div className=" block">
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <Splide
-                aria-label="recomendation-course"
-                options={splideOptionsRecoXL}
-              >
-                {getHome?.payload.recommendations.map((e) => (
-                  <SplideSlide key={e.id}>
-                    <Course CourseData={e} />
-                  </SplideSlide>
-                ))}
-              </Splide>
-            </div>
-          </div>
+          ) : (
+            <>
+              {" "}
+              <div className="splid-Courses-MainPage pb-10 pt-2 container">
+                <h3 className=" px-4 mt-4 text-[24px] md:text-[26px] font-medium md:font-semibold  tracking-[-1px] w-[90%] leading-7">
+                  Pick Your Courses: A Curated List of Recommended Courses for
+                  You
+                </h3>
+                <div className="  block">
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/* @ts-ignore */}
+                  <Splide
+                    aria-label="recomendation-course"
+                    options={splideOptionsRecoXL}
+                  >
+                    {getHome?.payload.recommendations.map((e) => (
+                      <SplideSlide key={e.id}>
+                        <Course CourseData={e} />
+                      </SplideSlide>
+                    ))}
+                  </Splide>
+                </div>
+              </div>
+              <div className="splid-Courses-MainPage mt-[-90px] pb-10 pt-2 border-t-2 container">
+                <h3 className=" px-4 mt-4 text-[24px] md:text-[26px] font-medium md:font-semibold tracking-[-1px] w-[90%] leading-7">
+                  Discover the Hottest Courses: Bestsellers for Success{" "}
+                </h3>
+                <div className=" block">
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/* @ts-ignore */}
+                  <Splide
+                    aria-label="recomendation-course"
+                    options={splideOptionsRecoXL}
+                  >
+                    {getHome?.payload.recommendations.map((e) => (
+                      <SplideSlide key={e.id}>
+                        <Course CourseData={e} />
+                      </SplideSlide>
+                    ))}
+                  </Splide>
+                </div>
+              </div>
+            </>
+          )}
         </>
       )}
+
       <div className="bg-white mt-[-90px] shadow-2xl pt-6 pb-16 flex justify-center items-center">
         <div className="  container lg:w-[75%] flex flex-col lg:flex-row lg:items-center gap-10 lg:justify-center">
           <div className=" flex justify-center">

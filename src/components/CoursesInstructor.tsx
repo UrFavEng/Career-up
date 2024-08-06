@@ -15,9 +15,19 @@ import Swal from "sweetalert2";
 const CoursesInstructor = () => {
   const [show, setShow] = useState<boolean>(false);
   const [addCourse, { isLoading: addCourseLoading }] = useAddCourseMutation();
-  const { data: allCats } = useGetAllCatsQuery();
-  const { data: teachingCoursesRes, isLoading: teachingCourseLoading } =
-    useTeachingCoursesQuery();
+  const {
+    data: allCats,
+    isLoading: loadingAllCat,
+    isFetching: isFetchingAllCats,
+    isError: ErrAllCat,
+  } = useGetAllCatsQuery();
+  const {
+    data: teachingCoursesRes,
+    isLoading: teachingCourseLoading,
+    isFetching,
+    error,
+    isError,
+  } = useTeachingCoursesQuery();
   const teachingAllCourses = teachingCoursesRes?.payload.teachingCourses;
   console.log(teachingAllCourses);
   const [sortBy, setSortBy] = useState<string>("newest");
@@ -164,49 +174,74 @@ const CoursesInstructor = () => {
           show ? "scale-100 block" : "scale-0 hidden"
         } transform origin-top ease-in-out`}
       >
-        <form
-          onSubmit={(e) => HandleAddCourse(e)}
-          action=""
-          className=" flex items-center justify-center mt-4 sm:mt-8 gap-1  flex-col sm:flex-row"
-        >
-          <input
-            type="text"
-            placeholder="Name"
-            className=" border-2 w-[90%] sm:w-[250px] placeholder:text-[#777777c3] h-[40px] outline-none px-2 py-1 text-text font-medium text-[17px]"
-          />
-          <select
-            title="Choose a category"
-            className=" w-[85%] sm:w-[180px] h-[40px] px-2 py-1 border-2 font-medium text-[17px] outline-none"
-          >
-            {allCats?.payload.categories.map((e) => (
-              <option key={e.id} value={e.id}>
-                {e.categoryName}
-              </option>
-            ))}
-          </select>
-          {addCourseLoading ? (
-            <div className=" px-3">
-              <Hourglass
-                visible={true}
-                height="35"
-                width="35"
-                ariaLabel="hourglass-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-                colors={["#EC5252", "#ec525252"]}
-              />
-            </div>
-          ) : (
-            <input
-              type="submit"
-              value="Add"
-              className=" hover:text-secondary w-[20%] sm:w-auto text-white py-2 px-5 bg-[#EC5252] hover:bg-[#e74242] text-[18px] h-[40px] font-bold "
+        {loadingAllCat || isFetchingAllCats ? (
+          <div className=" py-8 flex items-center justify-center">
+            <Hourglass
+              visible={true}
+              height="30"
+              width="30"
+              ariaLabel="hourglass-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+              colors={["#EC5252", "#ec525252"]}
             />
-          )}
-        </form>
+          </div>
+        ) : (
+          <>
+            {ErrAllCat ? (
+              <p className=" pt-5 text-center text-[18px] font-medium text-primary">
+                Error, try again
+              </p>
+            ) : (
+              <>
+                {" "}
+                <form
+                  onSubmit={(e) => HandleAddCourse(e)}
+                  action=""
+                  className=" flex items-center justify-center mt-4 sm:mt-8 gap-1  flex-col sm:flex-row"
+                >
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    className=" border-2 w-[90%] sm:w-[250px] placeholder:text-[#777777c3] h-[40px] outline-none px-2 py-1 text-text font-medium text-[17px]"
+                  />
+                  <select
+                    title="Choose a category"
+                    className=" w-[85%] sm:w-[180px] h-[40px] px-2 py-1 border-2 font-medium text-[17px] outline-none"
+                  >
+                    {allCats?.payload.categories.map((e) => (
+                      <option key={e.id} value={e.id}>
+                        {e.categoryName}
+                      </option>
+                    ))}
+                  </select>
+                  {addCourseLoading ? (
+                    <div className=" px-3">
+                      <Hourglass
+                        visible={true}
+                        height="35"
+                        width="35"
+                        ariaLabel="hourglass-loading"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                        colors={["#EC5252", "#ec525252"]}
+                      />
+                    </div>
+                  ) : (
+                    <input
+                      type="submit"
+                      value="Add"
+                      className=" hover:text-secondary w-[20%] sm:w-auto text-white py-2 px-5 bg-[#EC5252] hover:bg-[#e74242] text-[18px] h-[40px] font-bold "
+                    />
+                  )}
+                </form>
+              </>
+            )}
+          </>
+        )}
       </div>
       <div className=" flex flex-col gap-3 pb-6 pt-2 sm:pt-6">
-        {teachingCourseLoading ? (
+        {teachingCourseLoading || isFetching ? (
           <div className=" py-8 flex items-center justify-center">
             <Hourglass
               visible={true}
@@ -220,12 +255,30 @@ const CoursesInstructor = () => {
           </div>
         ) : (
           <>
-            {sortedCourses.map((e) => (
-              <div key={e.courseId}>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
+            {true == 500 && (
+              <p className=" pt-40 pb-72 flex justify-center items-center text-primary font-medium text-[18px]">
+                Something went wrong on our end. Please try again laters
+              </p>
+            )}{" "}
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
+            {error?.status == 401 && (
+              <p className=" py-[80px] flex justify-center items-center text-primary font-bold text-[28px]">
+                You must login first{" "}
+              </p>
+            )}
+            {!isError && (
+              <>
                 {" "}
-                <TeachingCourses Courses={e} />
-              </div>
-            ))}
+                {sortedCourses.map((e) => (
+                  <div key={e.courseId}>
+                    <TeachingCourses Courses={e} />
+                  </div>
+                ))}
+              </>
+            )}
           </>
         )}
       </div>
