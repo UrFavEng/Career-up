@@ -251,9 +251,9 @@ const SectionCourse = ({
             onDragOver={(e) => {
               e.preventDefault();
             }}
-            className="bg-secondary text-text py-[12px] border-2 text-center font-bold text-[18px]"
+            className="bg-secondary text-primary py-[12px] border-2 text-center font-bold text-[18px]"
           >
-            Drop here
+            Drop or upload here, I'm empty
           </div>
         )}
         {SectionData.videos.map((v, index) => (
