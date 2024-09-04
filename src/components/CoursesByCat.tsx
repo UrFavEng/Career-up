@@ -138,7 +138,7 @@ const CoursesByCat = () => {
     isError,
   } = useGetCoursesByCatQuery(catid);
 
-  // console.log(getCoursesCats);
+  console.log(getCoursesCats?.payload.courses.length);
   const [mostOrNew, setMostOrNew] = useState<boolean>(true);
   // const [currentPage, setCurrentPage] = useState(1);
 
@@ -158,75 +158,82 @@ const CoursesByCat = () => {
           <h5 className=" text-accent-1 text-[18px] font-medium mt-2">
             Courses to get you started
           </h5>
-          <div className="splid-Courses-MainPage pb-10 pt-2">
-            <div className=" border-b-2 mb-4 flex items-center ">
-              <span
-                className={` ${
-                  mostOrNew ? " text-primary" : "text-text"
-                } font-semibold w-[130px] text-[20px] cursor-pointer  hover:bg-[#b1b1b156] py-4 px-2`}
-                onClick={() => setMostOrNew(true)}
-              >
-                Most popular
-              </span>
-              <span
-                className={` ${
-                  !mostOrNew ? " text-primary" : "text-text"
-                } font-semibold w-[130px] text-center text-[20px] cursor-pointer  hover:bg-[#b1b1b156] py-4 px-2`}
-                onClick={() => setMostOrNew(false)}
-              >
-                New
-              </span>
+          {getCoursesCats?.payload.courses.length == 0 && !isFetching ? (
+            <p className="text-[20px] text-center font-bold text-primary pb-[200px] pt-[100px]">
+              There are currently no courses available in this category, Be the
+              first instructor to contribute by adding your own courses!
+            </p>
+          ) : (
+            <div className="splid-Courses-MainPage pb-10 pt-2">
+              <div className=" border-b-2 mb-4 flex items-center ">
+                <span
+                  className={` ${
+                    mostOrNew ? " text-primary" : "text-text"
+                  } font-semibold w-[130px] text-[20px] cursor-pointer  hover:bg-[#b1b1b156] py-4 px-2`}
+                  onClick={() => setMostOrNew(true)}
+                >
+                  Most popular
+                </span>
+                <span
+                  className={` ${
+                    !mostOrNew ? " text-primary" : "text-text"
+                  } font-semibold w-[130px] text-center text-[20px] cursor-pointer  hover:bg-[#b1b1b156] py-4 px-2`}
+                  onClick={() => setMostOrNew(false)}
+                >
+                  New
+                </span>
+              </div>
+              <div className="  block">
+                {getCoursesCatsLoading || isFetching ? (
+                  <div className=" py-[80px] text-center w-fit mx-auto">
+                    <Hourglass
+                      visible={true}
+                      height="80"
+                      width="80"
+                      ariaLabel="hourglass-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      colors={["#EC5252", "#ec525252"]}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    {mostOrNew ? (
+                      <>
+                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                        {/* @ts-ignore */}
+                        <Splide
+                          aria-label="recomendation-course"
+                          options={splideOptionsRecoXL}
+                        >
+                          {getCoursesCats?.payload.popular.map((e) => (
+                            <SplideSlide key={e.id}>
+                              <Course CourseData={e} />
+                            </SplideSlide>
+                          ))}
+                        </Splide>
+                      </>
+                    ) : (
+                      <>
+                        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                        {/* @ts-ignore */}
+                        <Splide
+                          aria-label="recomendation-course"
+                          options={splideOptionsRecoXL}
+                        >
+                          {getCoursesCats?.payload.new.map((e) => (
+                            <SplideSlide key={e.id}>
+                              <Course CourseData={e} />
+                            </SplideSlide>
+                          ))}
+                        </Splide>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-            <div className="  block">
-              {getCoursesCatsLoading || isFetching ? (
-                <div className=" py-[80px] text-center w-fit mx-auto">
-                  <Hourglass
-                    visible={true}
-                    height="80"
-                    width="80"
-                    ariaLabel="hourglass-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                    colors={["#EC5252", "#ec525252"]}
-                  />
-                </div>
-              ) : (
-                <>
-                  {mostOrNew ? (
-                    <>
-                      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                      {/* @ts-ignore */}
-                      <Splide
-                        aria-label="recomendation-course"
-                        options={splideOptionsRecoXL}
-                      >
-                        {getCoursesCats?.payload.popular.map((e) => (
-                          <SplideSlide key={e.id}>
-                            <Course CourseData={e} />
-                          </SplideSlide>
-                        ))}
-                      </Splide>
-                    </>
-                  ) : (
-                    <>
-                      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                      {/* @ts-ignore */}
-                      <Splide
-                        aria-label="recomendation-course"
-                        options={splideOptionsRecoXL}
-                      >
-                        {getCoursesCats?.payload.new.map((e) => (
-                          <SplideSlide key={e.id}>
-                            <Course CourseData={e} />
-                          </SplideSlide>
-                        ))}
-                      </Splide>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
+          )}
           <div className="mt-[-100px] py-2">
             <h3 className=" mt-4 text-[26px] font-semibold tracking-[-1px]  md:w-[70%] leading-7">
               Inspiring Learning: Quotes to Ignite Student Passion for Knowledge

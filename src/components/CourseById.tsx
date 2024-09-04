@@ -46,6 +46,7 @@ const CourseById = () => {
   const { id } = useParams<{ id: string | undefined }>();
   const { data, isLoading, isFetching, error } =
     useGetCourseByIdPublicQuery(id);
+  console.log(error);
   const handleSuccess = () => {
     Swal.fire({
       position: "center",
